@@ -1,3 +1,10 @@
-import { Route } from '@angular/router';
+import { Routes } from '@angular/router';
 
-export const appRoutes: Route[] = [];
+import { DemoComboboxPage } from './pages/demo-combobox/demo-combobox';
+import { DemoSelectPage } from './pages/demo-select/demo-select';
+
+export const appRoutes: Routes = [
+  { path: '', redirectTo: 'select', pathMatch: 'full' },
+  { path: 'select', component: DemoSelectPage },
+  { path: 'combobox', component: DemoComboboxPage },
+];
