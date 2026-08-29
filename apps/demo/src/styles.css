@@ -1,2 +1,7 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined');
+@import '@angular/cdk/overlay-prebuilt.css';
 @import 'tailwindcss' source('./app');
-@plugin "daisyui";
+
+@plugin 'daisyui' {
+  themes: all;
+}
