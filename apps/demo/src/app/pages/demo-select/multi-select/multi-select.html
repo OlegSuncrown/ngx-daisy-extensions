@@ -1,0 +1,24 @@
+<fieldset class="fieldset">
+  <legend class="fieldset-legend">Multi select</legend>
+  <dxe-select-root [(value)]="selectedMultiValues" [multi]="true" [closeOnSelection]="false">
+    <dxe-select-trigger>
+      @if (selectedMultiValues().length > 0) {
+        {{ displayMultiValue() }}
+        <dxe-clear-button label="Clear selected labels" (clear)="selectedMultiValues.set([])" />
+      } @else {
+        <dxe-placeholder>Select labels</dxe-placeholder>
+        <dxe-dropdown-button />
+      }
+    </dxe-select-trigger>
+    <ng-container *dxeSelectPortal>
+      @for (label of options; track label.id) {
+        <dxe-select-option #option [value]="label.value" [label]="label.value">
+          <dxe-selection-indicator [class.invisible]="!option.selected()" />
+
+          <dxe-select-option-label>{{ label.value }}</dxe-select-option-label>
+        </dxe-select-option>
+      }
+    </ng-container>
+  </dxe-select-root>
+  <span class="label">Multi select with close on selection</span>
+</fieldset>

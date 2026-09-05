@@ -1,36 +1,32 @@
 <section>
-  <div>
-    <p class="text-primary text-sm font-semibold uppercase tracking-widest">Composable</p>
-    <h1 class="text-3xl font-bold">Select</h1>
-    <p class="mt-2 text-base-content/65">A prefixed DaisyUI select installed as application source.</p>
-  </div>
+  <h1 class="text-2xl font-bold">Select</h1>
+  <p class="text-sm text-gray-500 mb-4">Accessible select control demo using the Daisy Extensions select components.</p>
 
-  <div class="card border border-base-300 bg-base-100 shadow-sm">
-    <div class="card-body gap-3">
-      <span class="label">Frameworks</span>
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="card bg-base-100 card-border border-base-content/5 card-sm">
+        <div class="card-body">
+          <app-simple-select />
+        </div>
+      </div>
 
-      <dxe-select-root [(value)]="selectedFrameworks" [multi]="true" [closeOnSelection]="false">
-        <dxe-select-trigger>
-          @if (selectedFrameworks().length > 0) {
-            <span class="truncate">{{ displayValue() }}</span>
-            <dxe-clear-button label="Clear selected frameworks" (clear)="selectedFrameworks.set([])" />
-          } @else {
-            <dxe-placeholder>Select frameworks...</dxe-placeholder>
-            <dxe-dropdown-button />
-          }
-        </dxe-select-trigger>
+      <div class="card bg-base-100 card-border border-base-content/5 card-sm">
+        <div class="card-body">
+          <app-multi-select />
+        </div>
+      </div>
+    </div>
 
-        <ng-container *dxeSelectPortal>
-          @for (framework of frameworks; track framework.id) {
-            <dxe-select-option #option [value]="framework" [label]="framework.name">
-              <dxe-select-option-label>{{ framework.name }}</dxe-select-option-label>
-              <dxe-selection-indicator [class.invisible]="!option.selected()" />
-            </dxe-select-option>
-          }
-        </ng-container>
-      </dxe-select-root>
+    <div class="card bg-base-100 card-border border-base-content/5 card-sm">
+      <div class="card-body">
+        <app-select-sizes />
+      </div>
+    </div>
 
-      <p class="text-sm text-base-content/60">Selected: {{ selectedFrameworks().length }}</p>
+    <div class="card bg-base-100 card-border border-base-content/5 card-sm">
+      <div class="card-body">
+        <app-select-colors />
+      </div>
     </div>
   </div>
 </section>

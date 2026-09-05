@@ -1,0 +1,115 @@
+<h2 class="text-lg font-bold mb-2">Colors</h2>
+
+<div class="grid grid-cols-[20rem_20rem_20rem] gap-4">
+  <div class="font-bold">Single select</div>
+  <div class="font-bold">Multi select</div>
+  <div class="font-bold">Daisy UI</div>
+
+  <div class="flex flex-col gap-4">
+    @for (color of daisyUiColors(); track color) {
+      <dxe-select-root [color]="color" [(value)]="selectedValues">
+        <dxe-select-trigger>
+          @if (selectedValues().length > 0) {
+            {{ displayValue() }}
+          } @else {
+            <dxe-placeholder>Select a label</dxe-placeholder>
+          }
+          <dxe-dropdown-button />
+        </dxe-select-trigger>
+        <ng-container *dxeSelectPortal>
+          @for (label of options; track label.id) {
+            <dxe-select-option #option [value]="label.value" [label]="label.value">
+              <dxe-select-option-label>{{ label.value }}</dxe-select-option-label>
+              @if (option.selected()) {
+                <dxe-selection-indicator />
+              }
+            </dxe-select-option>
+          }
+        </ng-container>
+      </dxe-select-root>
+    }
+  </div>
+
+  <div class="flex flex-col gap-4">
+    @for (color of daisyUiColors(); track color) {
+      <dxe-select-root [color]="color" [multi]="true" [closeOnSelection]="false" [(value)]="selectedMultiValues">
+        <dxe-select-trigger>
+          @if (selectedMultiValues().length > 0) {
+            {{ displayMultiValue() }}
+            <dxe-clear-button label="Clear selected labels" (clear)="selectedMultiValues.set([])" />
+          } @else {
+            <dxe-placeholder>Select labels</dxe-placeholder>
+            <dxe-dropdown-button />
+          }
+        </dxe-select-trigger>
+        <ng-container *dxeSelectPortal>
+          @for (label of options; track label.id) {
+            <dxe-select-option #option [value]="label.value" [label]="label.value">
+              <dxe-select-option-label>{{ label.value }}</dxe-select-option-label>
+              @if (option.selected()) {
+                <dxe-selection-indicator />
+              }
+            </dxe-select-option>
+          }
+        </ng-container>
+      </dxe-select-root>
+    }
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <select class="select select-ghost">
+      <option disabled selected>Ghost</option>
+      <option>Ghost Apple</option>
+      <option>Ghost Orange</option>
+      <option>Ghost Tomato</option>
+    </select>
+    <select class="select select-primary">
+      <option disabled selected>Primary</option>
+      <option>Primary Apple</option>
+      <option>Primary Orange</option>
+      <option>Primary Tomato</option>
+    </select>
+    <select class="select select-secondary">
+      <option disabled selected>Secondary</option>
+      <option>Secondary Apple</option>
+      <option>Secondary Orange</option>
+      <option>Secondary Tomato</option>
+    </select>
+    <select class="select select-accent">
+      <option disabled selected>Accent</option>
+      <option>Accent Apple</option>
+      <option>Accent Orange</option>
+      <option>Accent Tomato</option>
+    </select>
+    <select class="select select-neutral">
+      <option disabled selected>Neutral</option>
+      <option>Neutral Apple</option>
+      <option>Neutral Orange</option>
+      <option>Neutral Tomato</option>
+    </select>
+    <select class="select select-info">
+      <option disabled selected>Info</option>
+      <option>Info Apple</option>
+      <option>Info Orange</option>
+      <option>Info Tomato</option>
+    </select>
+    <select class="select select-success">
+      <option disabled selected>Success</option>
+      <option>Success Apple</option>
+      <option>Success Orange</option>
+      <option>Success Tomato</option>
+    </select>
+    <select class="select select-warning">
+      <option disabled selected>Warning</option>
+      <option>Warning Apple</option>
+      <option>Warning Orange</option>
+      <option>Warning Tomato</option>
+    </select>
+    <select class="select select-error">
+      <option disabled selected>Error</option>
+      <option>Error Apple</option>
+      <option>Error Orange</option>
+      <option>Error Tomato</option>
+    </select>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<fieldset class="fieldset mb-4">
+  <legend class="fieldset-legend">Single select</legend>
+  <dxe-select-root [(value)]="selectedValues">
+    <dxe-select-trigger>
+      @if (selectedValues().length > 0) {
+        {{ selectedValues()[0] }}
+      } @else {
+        <dxe-placeholder>Select a label</dxe-placeholder>
+      }
+      <dxe-dropdown-button />
+    </dxe-select-trigger>
+    <ng-container *dxeSelectPortal>
+      @for (label of options; track label.id) {
+        <dxe-select-option #option [value]="label.value" [label]="label.value">
+          <dxe-select-option-label>{{ label.value }}</dxe-select-option-label>
+          @if (option.selected()) {
+            <dxe-selection-indicator />
+          }
+        </dxe-select-option>
+      }
+    </ng-container>
+  </dxe-select-root>
+  <span class="label">Simple single select</span>
+</fieldset>
