@@ -1,3 +1,55 @@
-<section>
-  <h1 class="text-2xl font-bold">Select</h1>
+<section class="mx-auto max-w-3xl space-y-6">
+  <div>
+    <p class="text-primary text-sm font-semibold uppercase tracking-widest">
+      Composable
+    </p>
+    <h1 class="text-3xl font-bold">Select</h1>
+    <p class="mt-2 text-base-content/65">
+      A prefixed DaisyUI select installed as application source.
+    </p>
+  </div>
+
+  <div class="card border border-base-300 bg-base-100 shadow-sm">
+    <div class="card-body gap-3">
+      <span class="label">Frameworks</span>
+
+      <dxe-select-root
+        [(value)]="selectedFrameworks"
+        [multi]="true"
+        [closeOnSelection]="false"
+      >
+        <dxe-select-trigger>
+          @if (selectedFrameworks().length > 0) {
+          <span class="truncate">{{ displayValue() }}</span>
+          <dxe-clear-button
+            label="Clear selected frameworks"
+            (clear)="selectedFrameworks.set([])"
+          />
+          } @else {
+          <dxe-placeholder>Select frameworks...</dxe-placeholder>
+          <dxe-dropdown-button />
+          }
+        </dxe-select-trigger>
+
+        <ng-container *dxeSelectPortal>
+          @for (framework of frameworks; track framework.id) {
+          <dxe-select-option
+            #option
+            [value]="framework"
+            [label]="framework.name"
+          >
+            <dxe-select-option-label
+              >{{ framework.name }}</dxe-select-option-label
+            >
+            <dxe-selection-indicator [class.invisible]="!option.selected()" />
+          </dxe-select-option>
+          }
+        </ng-container>
+      </dxe-select-root>
+
+      <p class="text-sm text-base-content/60">
+        Selected: {{ selectedFrameworks().length }}
+      </p>
+    </div>
+  </div>
 </section>

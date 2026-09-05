@@ -14,7 +14,13 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": false,
-    "paths": {}
+    "baseUrl": ".",
+    "paths": {
+      "@dxe/combobox": ["./libs/components/registry/combobox/index.ts"],
+      "@dxe/select": ["./libs/components/registry/select/index.ts"],
+      "@dxe/shared": ["./libs/components/registry/shared/index.ts"],
+      "@dxe/styles": ["./libs/components/registry/styles/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

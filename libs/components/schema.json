@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ngx-daisy-extensions.dev/schema.json",
+  "title": "ngx-daisy-extensions configuration",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "componentsPath": {
+      "type": "string",
+      "description": "Directory where component source is installed"
+    }
+  },
+  "required": ["componentsPath"],
+  "additionalProperties": false
+}

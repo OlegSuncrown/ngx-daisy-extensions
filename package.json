@@ -2,7 +2,11 @@
   "name": "@ngx-daisy-extensions/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dxe": "node libs/components/bin/cli.mjs",
+    "start": "nx serve demo",
+    "build": "nx build demo"
+  },
   "private": true,
   "dependencies": {
     "@angular/aria": "^22.1.4",

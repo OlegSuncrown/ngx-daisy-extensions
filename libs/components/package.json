@@ -1,0 +1,19 @@
+{
+  "name": "ngx-daisy-extensions",
+  "version": "0.0.1",
+  "description": "DaisyUI components copied into Angular applications as source",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "ngx-daisy-extensions": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "registry",
+    "schema.json",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

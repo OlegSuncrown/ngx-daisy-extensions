@@ -1,3 +1,42 @@
-<section>
-  <h1 class="text-2xl font-bold">Combobox</h1>
+<section class="mx-auto max-w-3xl space-y-6">
+  <div>
+    <p class="text-primary text-sm font-semibold uppercase tracking-widest">Composable</p>
+    <h1 class="text-3xl font-bold">Combobox</h1>
+    <p class="mt-2 text-base-content/65">Search and select one or more countries.</p>
+  </div>
+
+  <div class="card border border-base-300 bg-base-100 shadow-sm">
+    <div class="card-body gap-3">
+      <label class="label" for="country-search">Countries</label>
+
+      <dxe-combobox-root [(value)]="selectedCountries" [multi]="true" [closeOnSelection]="false">
+        <dxe-combobox-trigger>
+          @if (selectedCountries().length > 0) {
+            <span class="truncate">{{ displayValue() }}</span>
+            <dxe-clear-button label="Clear selected countries" (clear)="selectedCountries.set([])" />
+          } @else {
+            <dxe-placeholder>Select countries...</dxe-placeholder>
+            <dxe-dropdown-button />
+          }
+        </dxe-combobox-trigger>
+
+        <input id="country-search" type="text" dxeComboboxInput alwaysExpanded placeholder="Search..." [(value)]="searchString" />
+
+        @if (options().length === 0) {
+          <dxe-empty-state>No results found</dxe-empty-state>
+        }
+
+        <ng-container *dxeComboboxPortal>
+          @for (country of options(); track country.code) {
+            <dxe-combobox-option #option [value]="country" [label]="country.name">
+              <dxe-combobox-option-label>{{ country.name }}</dxe-combobox-option-label>
+              <dxe-selection-indicator [class.invisible]="!option.selected()" />
+            </dxe-combobox-option>
+          }
+        </ng-container>
+      </dxe-combobox-root>
+
+      <p class="text-sm text-base-content/60">Selected: {{ selectedCountries().length }}</p>
+    </div>
+  </div>
 </section>

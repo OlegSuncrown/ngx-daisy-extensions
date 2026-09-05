@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "items": {
+    "shared": {
+      "files": [
+        "shared/clear-button.ts",
+        "shared/dropdown-button.ts",
+        "shared/empty-state.ts",
+        "shared/index.ts",
+        "shared/model.ts",
+        "shared/placeholder.ts",
+        "shared/select-positions.ts",
+        "shared/selection-indicator.ts"
+      ],
+      "registryDependencies": ["styles"]
+    },
+    "styles": {
+      "files": [
+        "styles/index.ts",
+        "styles/style-context.ts",
+        "styles/styled-item.ts",
+        "styles/styled-list.ts",
+        "styles/styled-popup.ts",
+        "styles/styled-trigger.ts"
+      ],
+      "registryDependencies": []
+    },
+    "select": {
+      "files": [
+        "select/index.ts",
+        "select/select-option-label.ts",
+        "select/select-option.ts",
+        "select/select-portal.ts",
+        "select/select-root.ts",
+        "select/select-trigger.ts"
+      ],
+      "registryDependencies": ["shared", "styles"]
+    },
+    "combobox": {
+      "files": [
+        "combobox/combobox-input.ts",
+        "combobox/combobox-option-label.ts",
+        "combobox/combobox-option.ts",
+        "combobox/combobox-portal.ts",
+        "combobox/combobox-root.ts",
+        "combobox/combobox-trigger.ts",
+        "combobox/index.ts"
+      ],
+      "registryDependencies": ["shared", "styles"]
+    }
+  }
+}
