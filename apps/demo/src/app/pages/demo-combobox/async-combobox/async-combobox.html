@@ -1,0 +1,36 @@
+<fieldset class="fieldset mb-4">
+  <legend class="fieldset-legend">Search users from a JSON API</legend>
+  <dxe-combobox-root [value]="listboxValue()" (valueChange)="onValueChange($event)">
+    <dxe-combobox-trigger>
+      <span class="flex items-center gap-2 min-w-0">
+        @if (selectedUser(); as user) {
+          <img class="size-6 rounded-full shrink-0" [src]="user.image" [alt]="user.label" />
+        }
+        @if (selectedUser()) {
+          <span class="truncate">{{ displayValue() }}</span>
+        } @else {
+          <dxe-placeholder>Select a user</dxe-placeholder>
+        }
+      </span>
+      <dxe-dropdown-button />
+    </dxe-combobox-trigger>
+    <input type="text" dxeComboboxInput alwaysExpanded placeholder="Search users..." [(value)]="filter" />
+    @if (showEmpty()) {
+      <dxe-empty-state>{{ emptyText() }}</dxe-empty-state>
+    }
+    <ng-container *dxeComboboxPortal>
+      @for (user of options(); track user.id) {
+        <dxe-combobox-option #option [value]="user.id" [label]="user.label">
+          <dxe-combobox-option-label>
+            <span class="flex items-center gap-2 min-w-0">
+              <img class="size-6 rounded-full shrink-0" [src]="user.image" [alt]="user.label" />
+              <span class="truncate">{{ user.label }}</span>
+            </span>
+          </dxe-combobox-option-label>
+          <dxe-selection-indicator [class.invisible]="!option.selected()" />
+        </dxe-combobox-option>
+      }
+    </ng-container>
+  </dxe-combobox-root>
+  <span class="label">Async search via dummyjson.com/users</span>
+</fieldset>

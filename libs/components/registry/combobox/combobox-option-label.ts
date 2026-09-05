@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'dxe-combobox-option-label',
   template: `<ng-content />`,
   host: {
-    class: 'grow',
+    class: 'grow min-w-0 truncate',
   },
 })
 export class DxeComboboxOptionLabel {}

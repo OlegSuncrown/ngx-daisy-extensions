@@ -18,7 +18,7 @@
       "files": [
         "styles/index.ts",
         "styles/style-context.ts",
-        "styles/styled-item.ts",
+        "styles/styled-option.ts",
         "styles/styled-list.ts",
         "styles/styled-popup.ts",
         "styles/styled-trigger.ts"

@@ -12,7 +12,7 @@ import { DxeComboboxRoot } from './combobox-root';
     },
   ],
   host: {
-    class: 'input input-sm mb-2',
+    class: 'input input-sm mb-2 focus:outline-none',
     '(keydown.escape)': 'onEscape()',
   },
 })

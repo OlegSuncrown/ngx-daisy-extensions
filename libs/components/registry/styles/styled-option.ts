@@ -52,12 +52,12 @@ const defaultActiveClass = 'bg-base-content/8 outline-2 -outline-offset-2 outlin
 const defaultSelectedClass = 'bg-base-content/10 text-base-content';
 
 @Directive({
-  selector: '[dxeStyledItem]',
+  selector: '[dxeStyledOption]',
   host: {
     '[class]': 'hostClass()',
   },
 })
-export class DxeStyledItem {
+export class DxeStyledOption {
   private readonly context = inject(DXE_STYLE_CONTEXT, { optional: true });
   private readonly option = inject(Option);
 
@@ -70,8 +70,8 @@ export class DxeStyledItem {
   protected readonly hostClass = computed(() => {
     const color = this.resolvedColor();
     return [
-      'flex items-center gap-2 cursor-pointer whitespace-normal rounded-(--radius-field)',
-      'transition-colors duration-0 hover:duration-50',
+      'flex items-center gap-2 min-w-0 overflow-hidden cursor-pointer rounded-(--radius-field)',
+      'transition-[background-color] duration-0 hover:duration-50',
       sizeClasses[this.resolvedSize()],
       color ? hoverClasses[color] : defaultHoverClass,
       this.option.active() ? (color ? activeClasses[color] : defaultActiveClass) : null,

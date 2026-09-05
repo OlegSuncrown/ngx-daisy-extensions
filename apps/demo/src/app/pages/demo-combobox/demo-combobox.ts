@@ -1,35 +1,12 @@
-import { Component, computed, signal } from '@angular/core';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
-
-interface Country {
-  code: string;
-  name: string;
-}
-
-const COUNTRIES: Country[] = [
-  { code: 'ca', name: 'Canada' },
-  { code: 'de', name: 'Germany' },
-  { code: 'jp', name: 'Japan' },
-  { code: 'ua', name: 'Ukraine' },
-  { code: 'us', name: 'United States' },
-];
+import { Component } from '@angular/core';
+import { AsyncCombobox } from './async-combobox/async-combobox';
+import { FormCombobox } from './form-combobox/form-combobox';
+import { MultiDialogCombobox } from './multi-dialog-combobox/multi-dialog-combobox';
+import { SimpleDialogCombobox } from './simple-dialog-combobox/simple-dialog-combobox';
 
 @Component({
   selector: 'app-demo-combobox-page',
-  imports: [DxeComboboxImports, DxeSelectionIndicator],
+  imports: [SimpleDialogCombobox, MultiDialogCombobox, AsyncCombobox, FormCombobox],
   templateUrl: './demo-combobox.html',
 })
-export class DemoComboboxPage {
-  protected readonly selectedCountries = signal<Country[]>([]);
-  protected readonly searchString = signal('');
-  protected readonly options = computed(() => {
-    const search = this.searchString().trim().toLocaleLowerCase();
-    return COUNTRIES.filter((country) => country.name.toLocaleLowerCase().includes(search));
-  });
-  protected readonly displayValue = computed(() =>
-    this.selectedCountries()
-      .map((country) => country.name)
-      .join(', '),
-  );
-}
+export class DemoComboboxPage {}

@@ -1,0 +1,27 @@
+<fieldset class="fieldset mb-4">
+  <legend class="fieldset-legend">Dialog combobox</legend>
+  <dxe-combobox-root [(value)]="selectedCountries">
+    <dxe-combobox-trigger>
+      @if (selectedCountries().length > 0) {
+        {{ selectedCountries()[0]?.name }}
+        <dxe-clear-button label="Clear selected labels" (clear)="selectedCountries.set([])" />
+      } @else {
+        <dxe-placeholder>Select a country...</dxe-placeholder>
+        <dxe-dropdown-button />
+      }
+    </dxe-combobox-trigger>
+    <input type="text" dxeComboboxInput alwaysExpanded placeholder="Search..." [(value)]="searchString" />
+    @if (options().length === 0) {
+      <dxe-empty-state>No results found</dxe-empty-state>
+    }
+    <ng-container *dxeComboboxPortal>
+      @for (country of options(); track country.code) {
+        <dxe-combobox-option #option [value]="country" [label]="country.name">
+          <dxe-combobox-option-label>{{ country.name }}</dxe-combobox-option-label>
+          <dxe-selection-indicator [class.invisible]="!option.selected()" />
+        </dxe-combobox-option>
+      }
+    </ng-container>
+  </dxe-combobox-root>
+  <span class="label">Composable dialog combobox from @dxe/combobox</span>
+</fieldset>

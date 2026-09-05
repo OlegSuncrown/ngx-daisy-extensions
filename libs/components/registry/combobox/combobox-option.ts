@@ -1,6 +1,6 @@
 import { Option } from '@angular/aria/listbox';
 import { Component, computed, inject } from '@angular/core';
-import { DxeStyledItem } from '../styles/styled-item';
+import { DxeStyledOption } from '../styles/styled-option';
 
 @Component({
   selector: 'dxe-combobox-option',
@@ -9,7 +9,7 @@ import { DxeStyledItem } from '../styles/styled-item';
       directive: Option,
       inputs: ['value', 'label', 'disabled'],
     },
-    DxeStyledItem,
+    DxeStyledOption,
   ],
   template: `<ng-content />`,
 })

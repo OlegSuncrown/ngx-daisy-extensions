@@ -1,0 +1,43 @@
+<fieldset class="fieldset mb-4">
+  <legend class="fieldset-legend">Search users with Signal Forms</legend>
+  <dxe-combobox-root [value]="listboxValue()" (valueChange)="onValueChange($event)">
+    <dxe-combobox-trigger>
+      @if (selectedUser(); as user) {
+        <span class="flex items-center gap-2 min-w-0">
+          <img class="size-6 rounded-full shrink-0" [src]="user.image" [alt]="user.label" />
+          <span class="truncate">{{ displayValue() }}</span>
+        </span>
+        <dxe-clear-button label="Clear selected user" (clear)="clear()" />
+      } @else {
+        <dxe-placeholder>Select a user</dxe-placeholder>
+        <dxe-dropdown-button />
+      }
+    </dxe-combobox-trigger>
+    <input type="text" dxeComboboxInput alwaysExpanded placeholder="Search users..." [(value)]="filter" />
+    @if (showEmpty()) {
+      <dxe-empty-state>{{ emptyText() }}</dxe-empty-state>
+    }
+    <ng-container *dxeComboboxPortal>
+      @for (user of options(); track user.id) {
+        <dxe-combobox-option #option [value]="user.id" [label]="user.label">
+          <dxe-combobox-option-label>
+            <span class="flex items-center gap-2 min-w-0">
+              <img class="size-6 rounded-full shrink-0" [src]="user.image" [alt]="user.label" />
+              <span class="truncate">{{ user.label }}</span>
+              <span class="text-xs opacity-50 truncate">{{ user.email }}</span>
+            </span>
+          </dxe-combobox-option-label>
+          <dxe-selection-indicator [class.invisible]="!option.selected()" />
+        </dxe-combobox-option>
+      }
+    </ng-container>
+  </dxe-combobox-root>
+  @if (userForm.userId().touched() && userForm.userId().invalid()) {
+    <ul>
+      @for (error of userForm.userId().errors(); track error) {
+        <li class="label text-error">{{ error.message }}</li>
+      }
+    </ul>
+  }
+  <span class="label">form().value: {{ formValue() | json }}</span>
+</fieldset>
