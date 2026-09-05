@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dxe": "node libs/components/bin/cli.mjs",
-    "start": "nx serve demo",
-    "build": "nx build demo"
+    "start": "npx nx serve demo",
+    "build": "npx nx build demo"
   },
   "private": true,
   "dependencies": {

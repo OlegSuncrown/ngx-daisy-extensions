@@ -14,7 +14,6 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": false,
-    "baseUrl": ".",
     "paths": {
       "@dxe/combobox": ["./libs/components/registry/combobox/index.ts"],
       "@dxe/select": ["./libs/components/registry/select/index.ts"],

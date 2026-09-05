@@ -1,10 +1,10 @@
-<div class="drawer lg:drawer-open min-h-screen bg-base-200">
+<div class="drawer xl:drawer-open h-dvh overflow-hidden bg-base-200">
   <input id="app-drawer" type="checkbox" class="drawer-toggle" aria-label="Toggle navigation menu" />
 
-  <div class="drawer-content flex min-h-screen flex-col">
-    <header class="navbar sticky top-0 z-30 border-b border-base-300 bg-base-100/95 shadow-sm backdrop-blur">
+  <div class="drawer-content flex h-full min-h-0 min-w-0 flex-col overflow-auto" cdkScrollable>
+    <header class="navbar sticky top-0 z-30 shrink-0 border-b border-base-content/5 bg-base-100 backdrop-blur">
       <div class="navbar-start gap-2">
-        <label for="app-drawer" class="btn btn-square btn-ghost lg:hidden" aria-label="Open navigation menu">
+        <label for="app-drawer" class="btn btn-square btn-ghost xl:hidden" aria-label="Open navigation menu">
           <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -13,16 +13,34 @@
       </div>
 
       <div class="navbar-end">
-        <select
-          class="select w-44"
-          aria-label="Choose theme"
-          [ngModel]="theme()"
-          (ngModelChange)="theme.set($event)"
-        >
-          @for (themeOption of themes; track themeOption.value) {
-            <option [value]="themeOption.value">{{ themeOption.label }}</option>
-          }
-        </select>
+        <dxe-select-root class="w-44" [(value)]="selectedValues" [closeOnSelection]="false">
+          <dxe-select-trigger aria-label="Choose theme">
+            @if (selectedValues().length > 0) {
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-xs!" translate="no" aria-hidden="true"> {{ themeIcon() }} </span>
+                <span>{{ themeLabel() }}</span>
+              </span>
+            } @else {
+              <dxe-placeholder>Choose theme</dxe-placeholder>
+            }
+            <dxe-dropdown-button />
+          </dxe-select-trigger>
+          <ng-container *dxeSelectPortal>
+            @for (themeOption of themes; track themeOption.value) {
+              <dxe-select-option #option [value]="themeOption.value" [label]="themeOption.label">
+                <dxe-select-option-label>
+                  <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-xs!" translate="no" aria-hidden="true"> {{ themeOption.icon }} </span>
+                    <span>{{ themeOption.label }}</span>
+                  </span>
+                </dxe-select-option-label>
+                @if (option.selected()) {
+                  <dxe-selection-indicator />
+                }
+              </dxe-select-option>
+            }
+          </ng-container>
+        </dxe-select-root>
       </div>
     </header>
 

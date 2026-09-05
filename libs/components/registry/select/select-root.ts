@@ -59,7 +59,7 @@ import { DxeSelectPortal } from './select-portal';
               (keydown.enter)="onCommit()"
               (keydown.space)="onCommit()"
             >
-              <ng-container [ngTemplateOutlet]="portal()?.templateRef ?? null" />
+              <ng-container [ngTemplateOutlet]="portal()?.templateRef ?? null" [ngTemplateOutletInjector]="'outlet'" />
             </div>
           </div>
         </ng-template>
