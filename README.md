@@ -8,6 +8,22 @@ Composable Angular components installed into applications as editable source.
 
 `ngx-daisy-extensions` provides Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI, with no extra dependencies.
 
+## Installation
+
+Install and configure the required Angular and styling packages:
+
+```bash
+npm install @angular/aria @angular/cdk tailwindcss daisyui
+```
+
+Useful setup links: [Angular ARIA](https://www.npmjs.com/package/@angular/aria), [Angular CDK](https://material.angular.dev/cdk/categories), [Tailwind CSS](https://tailwindcss.com/docs/installation/framework-guides/angular), [DaisyUI](https://daisyui.com/docs/install/).
+
+Then install `ngx-daisy-extensions`:
+
+```bash
+npm install ngx-daisy-extensions
+```
+
 ## Usage
 
 Initialize the project and choose where generated components should live:
