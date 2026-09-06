@@ -1,6 +1,6 @@
 {
   "name": "ngx-daisy-extensions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "DaisyUI components copied into Angular applications as source",
   "license": "MIT",
   "type": "module",

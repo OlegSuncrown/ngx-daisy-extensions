@@ -23,11 +23,24 @@ npm install ngx-daisy-extensions
 ## Usage
 
 ```bash
+npx ngx-daisy-extensions install
+```
+
+`install` creates `daisy-extensions.json` if needed and copies component files. The default directory is `src/app/daisy-extensions`.
+
+Install a specific component or choose a different directory:
+
+```bash
+npx ngx-daisy-extensions install combobox
+npx ngx-daisy-extensions install --directory src/app/ui
+```
+
+For a two-step setup, run `init` first and then `add`:
+
+```bash
 npx ngx-daisy-extensions init
 npx ngx-daisy-extensions add combobox
 ```
-
-`init` asks where component files should be written and stores the answer in `daisy-extensions.json`. The default is `src/app/daisy-extensions`.
 
 Available components:
 

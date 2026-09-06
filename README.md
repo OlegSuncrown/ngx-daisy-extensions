@@ -26,25 +26,30 @@ npm install ngx-daisy-extensions
 
 ## Usage
 
-Initialize the project and choose where generated components should live:
+Install all available components into the default directory, `src/app/daisy-extensions`:
+
+```bash
+npx ngx-daisy-extensions install
+```
+
+Choose a different directory or install specific components:
+
+```bash
+npx ngx-daisy-extensions install --directory src/app/ui
+npx ngx-daisy-extensions install select
+npx ngx-daisy-extensions install combobox
+```
+
+For a two-step setup, initialize the project first and then add components:
 
 ```bash
 npx ngx-daisy-extensions init
-```
-
-The default directory is `src/app/daisy-extensions`. The choice is stored in `daisy-extensions.json` and can also be supplied directly:
-
-```bash
-npx ngx-daisy-extensions init --directory src/app/ui
-```
-
-Add individual components:
-
-```bash
 npx ngx-daisy-extensions add select
 npx ngx-daisy-extensions add combobox
 npx ngx-daisy-extensions add --all
 ```
+
+`init` creates `daisy-extensions.json`; `install` creates it if needed and then copies component files.
 
 Existing modified files are skipped. Pass `--overwrite` only when registry versions should replace local changes, or use `--dry-run` to preview an installation.
 
@@ -81,8 +86,7 @@ import { DxeComboboxImports } from '@dxe/combobox';
 The published CLI copies those same files into consumer projects:
 
 ```bash
-npx ngx-daisy-extensions init
-npx ngx-daisy-extensions add combobox
+npx ngx-daisy-extensions install combobox
 ```
 
 ## License

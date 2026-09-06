@@ -17,6 +17,7 @@ function printHelp() {
 
 Usage:
   ngx-daisy-extensions init [--directory <path>] [--overwrite]
+  ngx-daisy-extensions install [component...] [--all] [--directory <path>] [--overwrite] [--dry-run]
   ngx-daisy-extensions add <component...> [--overwrite] [--dry-run]
   ngx-daisy-extensions add --all [--overwrite] [--dry-run]
   ngx-daisy-extensions list
@@ -98,25 +99,7 @@ async function promptForDirectory() {
 }
 
 async function init(projectRoot, options) {
-  const configPath = resolve(projectRoot, CONFIG_FILE);
-  if ((await exists(configPath)) && !options.overwrite) {
-    throw new Error(
-      `${CONFIG_FILE} already exists. Use --overwrite to replace it.`,
-    );
-  }
-
-  const componentsPath =
-    options.directory?.trim() || (await promptForDirectory());
-  resolveProjectPath(projectRoot, componentsPath);
-
-  const config = {
-    $schema: 'https://unpkg.com/ngx-daisy-extensions/schema.json',
-    componentsPath: componentsPath.replaceAll('\\', '/').replace(/\/$/, ''),
-  };
-
-  await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, 'utf8');
-  console.log(`Created ${CONFIG_FILE}.`);
-  console.log(`Components will be added to ${config.componentsPath}.`);
+  await createConfig(projectRoot, options);
 }
 
 async function readJson(path, description) {
@@ -165,14 +148,39 @@ async function warnAboutDependencies(projectRoot) {
     console.warn(`Missing project dependencies: ${missing.join(', ')}`);
 }
 
-async function add(projectRoot, requested, options) {
+async function createConfig(projectRoot, options) {
   const configPath = resolve(projectRoot, CONFIG_FILE);
-  if (!(await exists(configPath)))
+  if ((await exists(configPath)) && !options.overwrite) {
     throw new Error(
-      `Run "ngx-daisy-extensions init" first; ${CONFIG_FILE} was not found.`,
+      `${CONFIG_FILE} already exists. Use --overwrite to replace it.`,
     );
+  }
 
-  const config = await readJson(configPath, CONFIG_FILE);
+  const componentsPath =
+    options.directory?.trim() || (await promptForDirectory());
+  resolveProjectPath(projectRoot, componentsPath);
+
+  const config = {
+    $schema: 'https://unpkg.com/ngx-daisy-extensions/schema.json',
+    componentsPath: componentsPath.replaceAll('\\', '/').replace(/\/$/, ''),
+  };
+
+  if (!options.dryRun) {
+    await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, 'utf8');
+  }
+  console.log(`${options.dryRun ? 'Would create' : 'Created'} ${CONFIG_FILE}.`);
+  console.log(`Components will be added to ${config.componentsPath}.`);
+
+  return config;
+}
+
+async function readOrCreateConfig(projectRoot, options) {
+  const configPath = resolve(projectRoot, CONFIG_FILE);
+  if (await exists(configPath)) return readJson(configPath, CONFIG_FILE);
+  return createConfig(projectRoot, options);
+}
+
+async function addComponents(projectRoot, config, requested, options) {
   const destinationRoot = resolveProjectPath(
     projectRoot,
     config.componentsPath,
@@ -237,17 +245,37 @@ async function add(projectRoot, requested, options) {
   await warnAboutDependencies(projectRoot);
 }
 
+async function add(projectRoot, requested, options) {
+  const configPath = resolve(projectRoot, CONFIG_FILE);
+  if (!(await exists(configPath)))
+    throw new Error(
+      `Run "ngx-daisy-extensions init" first; ${CONFIG_FILE} was not found.`,
+    );
+
+  const config = await readJson(configPath, CONFIG_FILE);
+  await addComponents(projectRoot, config, requested, options);
+}
+
+async function install(projectRoot, requested, options) {
+  const config = await readOrCreateConfig(projectRoot, options);
+  await addComponents(projectRoot, config, requested, {
+    ...options,
+    all: options.all || requested.length === 0,
+  });
+}
+
 async function main() {
   const [command, ...rawArguments] = process.argv.slice(2);
   const { positional, options } = parseArguments(rawArguments);
 
-  if (!command || command === 'help' || options.help) {
+  if (!command || command === 'help' || command === '--help' || command === '-h' || options.help) {
     printHelp();
     return;
   }
 
   const projectRoot = process.cwd();
   if (command === 'init') await init(projectRoot, options);
+  else if (command === 'install') await install(projectRoot, positional, options);
   else if (command === 'add') await add(projectRoot, positional, options);
   else if (command === 'list') console.log(PUBLIC_COMPONENTS.join('\n'));
   else throw new Error(`Unknown command: ${command}`);
