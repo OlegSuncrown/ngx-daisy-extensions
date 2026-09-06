@@ -1,6 +1,8 @@
 # ngx-daisy-extensions
 
-DaisyUI components installed as editable Angular source files.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
+Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI, with no extra dependencies.
 
 ```bash
 npx ngx-daisy-extensions init
@@ -27,3 +29,7 @@ The generated Angular classes use the `Dxe` prefix. Element selectors use `dxe-`
 The CLI does not overwrite changed component files unless `--overwrite` is passed.
 
 This package is for consumer projects. In this repository the demo imports `libs/components/registry` through `@dxe/*` path aliases.
+
+## License
+
+MIT © [Oleh Biblyi](https://github.com/OlegSuncrown)

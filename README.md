@@ -1,6 +1,12 @@
 # ngx-daisy-extensions
 
-Composable DaisyUI components installed into Angular applications as editable source, following the shadcn ownership model.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
+Composable Angular components installed into applications as editable source.
+
+## About
+
+`ngx-daisy-extensions` provides Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI, with no extra dependencies.
 
 ## Usage
 
@@ -62,3 +68,7 @@ The published CLI copies those same files into consumer projects:
 npx ngx-daisy-extensions init
 npx ngx-daisy-extensions add combobox
 ```
+
+## License
+
+MIT © [Oleh Biblyi](https://github.com/OlegSuncrown)

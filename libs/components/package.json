@@ -11,7 +11,8 @@
     "bin",
     "registry",
     "schema.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=20.19.0"
