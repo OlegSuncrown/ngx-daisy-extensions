@@ -70,7 +70,7 @@ export class DxeStyledOption {
   protected readonly hostClass = computed(() => {
     const color = this.resolvedColor();
     return [
-      'flex items-center gap-2 min-w-0 overflow-hidden cursor-pointer rounded-(--radius-field)',
+      'flex shrink-0 items-center gap-2 min-w-0 overflow-hidden cursor-pointer rounded-(--radius-field)',
       'transition-[background-color] duration-0 hover:duration-50',
       sizeClasses[this.resolvedSize()],
       color ? hoverClasses[color] : defaultHoverClass,

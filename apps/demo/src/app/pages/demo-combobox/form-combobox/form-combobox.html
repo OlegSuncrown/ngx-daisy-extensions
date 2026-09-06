@@ -21,10 +21,12 @@
       @for (user of options(); track user.id) {
         <dxe-combobox-option #option [value]="user.id" [label]="user.label">
           <dxe-combobox-option-label>
-            <span class="flex items-center gap-2 min-w-0">
+            <span class="flex items-center gap-2 min-w-0 py-0.5">
               <img class="size-6 rounded-full shrink-0" [src]="user.image" [alt]="user.label" />
-              <span class="truncate">{{ user.label }}</span>
-              <span class="text-xs opacity-50 truncate">{{ user.email }}</span>
+              <span class="flex flex-col min-w-0">
+                <span class="truncate">{{ user.label }}</span>
+                <span class="text-xs opacity-50 truncate">{{ user.email }}</span>
+              </span>
             </span>
           </dxe-combobox-option-label>
           <dxe-selection-indicator [class.invisible]="!option.selected()" />

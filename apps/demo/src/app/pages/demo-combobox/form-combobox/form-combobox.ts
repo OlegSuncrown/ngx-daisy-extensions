@@ -110,7 +110,7 @@ export class FormCombobox {
   onValueChange(ids: number[]) {
     if (ids.length > 0) {
       const id = ids[0];
-      const user = this.options().find((option) => option.id === id) ?? null;
+      const user = this.options().find((option) => option.id === id) ?? this.selectedUser();
 
       this.userForm.userId().value.set(id);
       this.userForm.userId().markAsTouched();

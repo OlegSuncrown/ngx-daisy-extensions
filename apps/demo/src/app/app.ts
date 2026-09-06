@@ -53,22 +53,15 @@ const THEMES: ThemeOption[] = [
 
 function readStoredTheme(): string {
   if (typeof localStorage === 'undefined') {
-    return 'abyss';
+    return 'dracula';
   }
   const stored = localStorage.getItem(THEME_STORAGE_KEY);
-  return stored && THEMES.some((t) => t.value === stored) ? stored : 'abyss';
+  return stored && THEMES.some((t) => t.value === stored) ? stored : 'dracula';
 }
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    CdkScrollable,
-    DxeSelectImports,
-    DxeSelectionIndicator,
-  ],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, CdkScrollable, DxeSelectImports, DxeSelectionIndicator],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

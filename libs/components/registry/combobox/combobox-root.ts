@@ -117,10 +117,18 @@ export class DxeComboboxRoot<V = unknown> implements DxeStyleContext {
     afterRenderEffect(() => {
       if (this.expanded()) {
         untracked(() => {
-          this.selection.set(this.value());
           setTimeout(() => this.search()?.focus());
         });
       }
+    });
+
+    afterRenderEffect(() => {
+      if (!this.expanded() || !this.listbox()) {
+        return;
+      }
+
+      const value = this.value();
+      untracked(() => this.selection.set(value));
     });
 
     afterRenderEffect(() => {

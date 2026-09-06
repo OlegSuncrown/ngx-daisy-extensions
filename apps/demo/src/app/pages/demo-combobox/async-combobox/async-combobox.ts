@@ -92,7 +92,7 @@ export class AsyncCombobox {
   onValueChange(ids: number[]) {
     if (ids.length > 0) {
       const id = ids[0];
-      const user = this.options().find((option) => option.id === id) ?? null;
+      const user = this.options().find((option) => option.id === id) ?? this.selectedUser();
 
       this.value.set(id);
       this.selectedUser.set(user);
