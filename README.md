@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
+[Demo](https://ngx-daisy-extensions.netlify.app)
+
 Composable Angular components installed into applications as editable source.
 
 ## About
@@ -10,52 +12,33 @@ Composable Angular components installed into applications as editable source.
 
 ## Installation
 
-Install and configure the required Angular and styling packages:
+1.Install Angular CDK and import overlay styles:
 
 ```bash
-npm install @angular/aria @angular/cdk tailwindcss daisyui
+npm install @angular/cdk
 ```
 
-Useful setup links: [Angular ARIA](https://www.npmjs.com/package/@angular/aria), [Angular CDK](https://material.angular.dev/cdk/categories), [Tailwind CSS](https://tailwindcss.com/docs/installation/framework-guides/angular), [DaisyUI](https://daisyui.com/docs/install/).
+```css
+@import '@angular/cdk/overlay-prebuilt.css';
+```
 
-Then install `ngx-daisy-extensions`:
+2.Install Angular ARIA:
 
 ```bash
-npm install ngx-daisy-extensions
+npm install @angular/aria
 ```
 
-## Usage
+3.Install [Tailwind CSS](https://tailwindcss.com/docs/installation/framework-guides/angular).
 
-Install all available components into the default directory, `src/app/daisy-extensions`:
+4.Install [daisyUI for Angular](https://daisyui.com/docs/install/angular/).
+
+5.Install `ngx-daisy-extensions`:
 
 ```bash
 npx ngx-daisy-extensions install
 ```
 
-Choose a different directory or install specific components:
-
-```bash
-npx ngx-daisy-extensions install --directory src/app/ui
-npx ngx-daisy-extensions install select
-npx ngx-daisy-extensions install combobox
-```
-
-For a two-step setup, initialize the project first and then add components:
-
-```bash
-npx ngx-daisy-extensions init
-npx ngx-daisy-extensions add select
-npx ngx-daisy-extensions add combobox
-npx ngx-daisy-extensions add --all
-```
-
-`init` creates `daisy-extensions.json`; `install` creates it if needed and then copies component files.
-
-Existing modified files are skipped. Pass `--overwrite` only when registry versions should replace local changes, or use `--dry-run` to preview an installation.
-
 ## Angular API
-
-Classes are prefixed with `Dxe`, element selectors with `dxe-`, and directive selectors with `dxe`:
 
 ```html
 <dxe-combobox-root [(value)]="selectedCountries">
