@@ -15,10 +15,7 @@
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
-      "@dxe/combobox": ["./libs/components/registry/combobox/index.ts"],
-      "@dxe/select": ["./libs/components/registry/select/index.ts"],
-      "@dxe/shared": ["./libs/components/registry/shared/index.ts"],
-      "@dxe/styles": ["./libs/components/registry/styles/index.ts"]
+      "ngx-daisy-extensions": ["./libs/components/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

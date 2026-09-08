@@ -1,7 +1,7 @@
 import { Option } from '@angular/aria/listbox';
 import { computed, Directive, inject, input } from '@angular/core';
-import type { DxeColor, DxeSize } from '../shared/model';
 import { DXE_STYLE_CONTEXT } from './style-context';
+import type { DxeColor, DxeSize } from './style-context';
 
 const sizeClasses: Record<DxeSize, string> = {
   xs: 'min-h-5 px-1.5 text-[0.6875rem]',

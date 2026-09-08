@@ -2,8 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { Component, computed, debounced, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 export interface UserOption {
   id: number;

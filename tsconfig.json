@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "preserve",
+    "target": "es2022",
+    "isolatedModules": true,
+    "emitDecoratorMetadata": false
+  },
+  "include": ["libs/components/registry/**/*.ts"],
+  "exclude": ["node_modules", "tmp", "dist"]
+}

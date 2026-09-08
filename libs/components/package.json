@@ -1,19 +1,40 @@
 {
   "name": "ngx-daisy-extensions",
-  "version": "0.0.2",
-  "description": "DaisyUI components copied into Angular applications as source",
+  "version": "0.0.13",
+  "description": "Angular components for DaisyUI",
   "license": "MIT",
-  "type": "module",
-  "bin": {
-    "ngx-daisy-extensions": "./bin/cli.mjs"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OlegSuncrown/ngx-daisy-extensions.git"
   },
-  "files": [
-    "bin",
-    "registry",
-    "schema.json",
-    "README.md",
-    "LICENSE"
+  "bugs": {
+    "url": "https://github.com/OlegSuncrown/ngx-daisy-extensions/issues"
+  },
+  "homepage": "https://github.com/OlegSuncrown/ngx-daisy-extensions#readme",
+  "scripts": {
+    "prepublishOnly": "node -e \"const cwd=process.cwd().replace(/\\\\/g,'/'); if (!cwd.endsWith('/dist/libs/components')) { console.error('Run npm run publish:components from the workspace root. Do not publish libs/components directly.'); process.exit(1); }\""
+  },
+  "sideEffects": [
+    "styles.css"
   ],
+  "exports": {
+    "./styles.css": {
+      "style": "./styles.css",
+      "default": "./styles.css"
+    }
+  },
+  "peerDependencies": {
+    "@angular/aria": "^22.0.0",
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=20.19.0"
   }

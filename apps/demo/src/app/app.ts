@@ -2,8 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DxeSelectImports } from '@dxe/select';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 interface ThemeOption {
   value: string;

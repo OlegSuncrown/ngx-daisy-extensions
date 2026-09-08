@@ -1,6 +1,8 @@
 import { InjectionToken } from '@angular/core';
 import type { Signal } from '@angular/core';
-import type { DxeColor, DxeSize } from '../shared/model';
+
+export type DxeSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type DxeColor = 'ghost' | 'primary' | 'secondary' | 'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'error';
 
 export interface DxeStyleContext {
   readonly size: Signal<DxeSize>;

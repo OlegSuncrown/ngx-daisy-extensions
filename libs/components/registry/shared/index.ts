@@ -4,4 +4,5 @@ export { DxeEmptyState } from './empty-state';
 export { DxePlaceholder } from './placeholder';
 export { DxeSelectionIndicator } from './selection-indicator';
 export { dxeColors, dxeSizes } from './model';
+export { DXE_SELECT_POSITIONS } from './select-positions';
 export type { DxeColor, DxeSize } from './model';

@@ -20,8 +20,7 @@ export const SIMPLE_SELECT_HTML = `<dxe-select-root [(value)]="selectedValues">
 </dxe-select-root>`;
 
 export const SIMPLE_SELECT_TS = `import { Component, signal } from '@angular/core';
-import { DxeSelectImports } from '@dxe/select';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 @Component({
   selector: 'app-simple-select',
@@ -58,8 +57,7 @@ export const MULTI_SELECT_HTML = `<dxe-select-root [(value)]="selectedMultiValue
 </dxe-select-root>`;
 
 export const MULTI_SELECT_TS = `import { Component, computed, signal } from '@angular/core';
-import { DxeSelectImports } from '@dxe/select';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 @Component({
   selector: 'app-multi-select',
@@ -108,8 +106,7 @@ export const SELECT_SIZES_HTML = `<dxe-select-root [size]="size" [(value)]="sele
 </dxe-select-root>`;
 
 export const SELECT_SIZES_TS = `import { Component, signal } from '@angular/core';
-import { DxeSelectImports } from '@dxe/select';
-import { DxeSelectionIndicator, dxeSizes } from '@dxe/shared';
+import { DxeSelectImports, DxeSelectionIndicator, dxeSizes } from 'ngx-daisy-extensions';
 
 @Component({
   selector: 'app-select-sizes',
@@ -148,8 +145,7 @@ export const SELECT_COLORS_HTML = `<dxe-select-root [color]="color" [(value)]="s
 </dxe-select-root>`;
 
 export const SELECT_COLORS_TS = `import { Component, signal } from '@angular/core';
-import { DxeSelectImports } from '@dxe/select';
-import { DxeSelectionIndicator, dxeColors } from '@dxe/shared';
+import { DxeSelectImports, DxeSelectionIndicator, dxeColors } from 'ngx-daisy-extensions';
 
 @Component({
   selector: 'app-select-colors',

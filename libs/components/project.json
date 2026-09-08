@@ -2,6 +2,17 @@
   "name": "components",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "root": "libs/components",
+  "sourceRoot": "libs/components",
   "projectType": "library",
-  "tags": ["type:registry"]
+  "tags": ["type:components"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/libs/components"],
+      "options": {
+        "project": "libs/components/ng-package.json",
+        "tsConfig": "libs/components/tsconfig.lib.json"
+      }
+    }
+  }
 }

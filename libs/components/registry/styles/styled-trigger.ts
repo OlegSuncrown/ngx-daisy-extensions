@@ -1,6 +1,6 @@
 import { computed, Directive, inject, input } from '@angular/core';
-import type { DxeColor, DxeSize } from '../shared/model';
 import { DXE_STYLE_CONTEXT } from './style-context';
+import type { DxeColor, DxeSize } from './style-context';
 
 const sizeClasses: Record<DxeSize, string> = {
   xs: 'h-6 text-[0.6875rem]',

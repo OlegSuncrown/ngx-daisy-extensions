@@ -23,8 +23,7 @@ export const SIMPLE_COMBOBOX_HTML = `<dxe-combobox-root [(value)]="selectedCount
 </dxe-combobox-root>`;
 
 export const SIMPLE_COMBOBOX_TS = `import { Component, computed, signal } from '@angular/core';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 interface Country {
   code: string;
@@ -77,8 +76,7 @@ export const MULTI_COMBOBOX_HTML = `<dxe-combobox-root [(value)]="selectedCountr
 </dxe-combobox-root>`;
 
 export const MULTI_COMBOBOX_TS = `import { Component, computed, signal } from '@angular/core';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 interface Country {
   code: string;
@@ -148,8 +146,7 @@ export const ASYNC_COMBOBOX_HTML = `<dxe-combobox-root [value]="listboxValue()" 
 
 export const ASYNC_COMBOBOX_TS = `import { httpResource } from '@angular/common/http';
 import { Component, computed, debounced, signal } from '@angular/core';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 interface UserOption {
   id: number;
@@ -267,8 +264,7 @@ export const FORM_COMBOBOX_HTML = `<dxe-combobox-root [value]="listboxValue()" (
 export const FORM_COMBOBOX_TS = `import { httpResource } from '@angular/common/http';
 import { Component, computed, debounced, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
 interface UserOption {
   id: number;

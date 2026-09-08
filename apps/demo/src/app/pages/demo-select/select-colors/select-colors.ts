@@ -1,6 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { DxeSelectImports } from '@dxe/select';
-import { DxeSelectionIndicator, dxeColors } from '@dxe/shared';
+import { DxeSelectImports, DxeSelectionIndicator, dxeColors } from 'ngx-daisy-extensions';
 import { generateStatusOptions } from '../../util/generate-options';
 
 @Component({

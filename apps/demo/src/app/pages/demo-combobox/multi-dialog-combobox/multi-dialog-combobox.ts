@@ -1,6 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { DxeComboboxImports } from '@dxe/combobox';
-import { DxeSelectionIndicator } from '@dxe/shared';
+import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 import { ALL_COUNTRIES, Country } from '../simple-dialog-combobox/simple-dialog-combobox';
 
 @Component({
