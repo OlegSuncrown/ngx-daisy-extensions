@@ -63,7 +63,29 @@ import { DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 @Component({
   selector: 'app-simple-select',
   imports: [DxeSelectImports, DxeSelectionIndicator],
-  templateUrl: './simple-select.html',
+  template: `
+    <dxe-select-root [(value)]="selectedValues">
+      <dxe-select-trigger>
+        @if (selectedValues().length > 0) {
+          {{ selectedValues()[0] }}
+        } @else {
+          <dxe-placeholder>Select a label</dxe-placeholder>
+        }
+        <dxe-dropdown-button />
+      </dxe-select-trigger>
+
+      <ng-container *dxeSelectPortal>
+        @for (label of options; track label.id) {
+          <dxe-select-option #option [value]="label.value" [label]="label.value">
+            <dxe-select-option-label>{{ label.value }}</dxe-select-option-label>
+            @if (option.selected()) {
+              <dxe-selection-indicator />
+            }
+          </dxe-select-option>
+        }
+      </ng-container>
+    </dxe-select-root>
+  `,
 })
 export class SimpleSelect {
   readonly selectedValues = signal<string[]>([]);
@@ -75,31 +97,7 @@ export class SimpleSelect {
 }
 ```
 
-```html
-<dxe-select-root [(value)]="selectedValues">
-  <dxe-select-trigger>
-    @if (selectedValues().length > 0) {
-      {{ selectedValues()[0] }}
-    } @else {
-      <dxe-placeholder>Select a label</dxe-placeholder>
-    }
-    <dxe-dropdown-button />
-  </dxe-select-trigger>
-
-  <ng-container *dxeSelectPortal>
-    @for (label of options; track label.id) {
-      <dxe-select-option #option [value]="label.value" [label]="label.value">
-        <dxe-select-option-label>{{ label.value }}</dxe-select-option-label>
-        @if (option.selected()) {
-          <dxe-selection-indicator />
-        }
-      </dxe-select-option>
-    }
-  </ng-container>
-</dxe-select-root>
-```
-
-### Simple combobox
+### Combobox
 
 ```ts
 import { Component, computed, signal } from '@angular/core';
@@ -113,7 +111,34 @@ interface Country {
 @Component({
   selector: 'app-simple-combobox',
   imports: [DxeComboboxImports, DxeSelectionIndicator],
-  templateUrl: './simple-combobox.html',
+  template: `
+    <dxe-combobox-root [(value)]="selectedCountries">
+      <dxe-combobox-trigger>
+        @if (selectedCountries().length > 0) {
+          {{ selectedCountries()[0]?.name }}
+          <dxe-clear-button label="Clear selected countries" (clear)="selectedCountries.set([])" />
+        } @else {
+          <dxe-placeholder>Select a country...</dxe-placeholder>
+          <dxe-dropdown-button />
+        }
+      </dxe-combobox-trigger>
+
+      <input type="text" dxeComboboxInput alwaysExpanded placeholder="Search..." [(value)]="searchString" />
+
+      @if (options().length === 0) {
+        <dxe-empty-state>No results found</dxe-empty-state>
+      }
+
+      <ng-container *dxeComboboxPortal>
+        @for (country of options(); track country.code) {
+          <dxe-combobox-option #option [value]="country" [label]="country.name">
+            <dxe-combobox-option-label>{{ country.name }}</dxe-combobox-option-label>
+            <dxe-selection-indicator [class.invisible]="!option.selected()" />
+          </dxe-combobox-option>
+        }
+      </ng-container>
+    </dxe-combobox-root>
+  `,
 })
 export class SimpleCombobox {
   readonly selectedCountries = signal<Country[]>([]);
@@ -130,35 +155,6 @@ export class SimpleCombobox {
     ),
   );
 }
-```
-
-```html
-<dxe-combobox-root [(value)]="selectedCountries">
-  <dxe-combobox-trigger>
-    @if (selectedCountries().length > 0) {
-      {{ selectedCountries()[0]?.name }}
-      <dxe-clear-button label="Clear selected countries" (clear)="selectedCountries.set([])" />
-    } @else {
-      <dxe-placeholder>Select a country...</dxe-placeholder>
-      <dxe-dropdown-button />
-    }
-  </dxe-combobox-trigger>
-
-  <input type="text" dxeComboboxInput alwaysExpanded placeholder="Search..." [(value)]="searchString" />
-
-  @if (options().length === 0) {
-    <dxe-empty-state>No results found</dxe-empty-state>
-  }
-
-  <ng-container *dxeComboboxPortal>
-    @for (country of options(); track country.code) {
-      <dxe-combobox-option #option [value]="country" [label]="country.name">
-        <dxe-combobox-option-label>{{ country.name }}</dxe-combobox-option-label>
-        <dxe-selection-indicator [class.invisible]="!option.selected()" />
-      </dxe-combobox-option>
-    }
-  </ng-container>
-</dxe-combobox-root>
 ```
 
 ## Development
