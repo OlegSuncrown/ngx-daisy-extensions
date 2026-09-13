@@ -23,18 +23,8 @@
 
     @if (tsCode()) {
       <div role="tablist" class="tabs tabs-box mb-3">
-        <button
-          type="button"
-          role="tab"
-          class="tab"
-          [class.tab-active]="activeTab() === 'html'"
-          (click)="selectTab('html')"
-        >
-          HTML
-        </button>
-        <button type="button" role="tab" class="tab" [class.tab-active]="activeTab() === 'ts'" (click)="selectTab('ts')">
-          TypeScript
-        </button>
+        <button type="button" role="tab" class="tab" [class.tab-active]="activeTab() === 'html'" (click)="selectTab('html')">HTML</button>
+        <button type="button" role="tab" class="tab" [class.tab-active]="activeTab() === 'ts'" (click)="selectTab('ts')">TypeScript</button>
       </div>
     }
 
@@ -42,7 +32,9 @@
       <div class="mb-3 text-xs text-base-content/60">Formatting with Prettier...</div>
     }
 
-    <pre class="bg-base-200 rounded-box p-4 overflow-auto max-h-[70vh] text-sm font-mono whitespace-pre"><code class="hljs bg-transparent! p-0!" [innerHTML]="highlightedCode()"></code></pre>
+    <pre
+      class="bg-black rounded-box p-4 overflow-auto max-h-[70vh] text-sm font-mono whitespace-pre"
+    ><code class="hljs bg-transparent! p-0!" [innerHTML]="highlightedCode()"></code></pre>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>

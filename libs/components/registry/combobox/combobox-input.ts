@@ -1,6 +1,6 @@
 import { Combobox } from '@angular/aria/combobox';
 import { Directive, ElementRef, inject } from '@angular/core';
-import { DxeComboboxRoot } from './combobox-root';
+import { DXE_COMBOBOX_CONTEXT } from './combobox-context';
 
 @Directive({
   selector: 'input[dxeComboboxInput]',
@@ -17,7 +17,7 @@ import { DxeComboboxRoot } from './combobox-root';
   },
 })
 export class DxeComboboxInput {
-  private readonly root = inject(DxeComboboxRoot, { optional: true });
+  private readonly context = inject(DXE_COMBOBOX_CONTEXT, { optional: true });
   private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
   readonly combobox = inject(Combobox);
@@ -27,6 +27,6 @@ export class DxeComboboxInput {
   }
 
   protected onEscape() {
-    this.root?.close();
+    this.context?.close();
   }
 }

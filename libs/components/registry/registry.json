@@ -28,6 +28,7 @@
     "select": {
       "files": [
         "select/index.ts",
+        "select/select-context.ts",
         "select/select-option-label.ts",
         "select/select-option.ts",
         "select/select-portal.ts",
@@ -38,6 +39,7 @@
     },
     "combobox": {
       "files": [
+        "combobox/combobox-context.ts",
         "combobox/combobox-input.ts",
         "combobox/combobox-option-label.ts",
         "combobox/combobox-option.ts",

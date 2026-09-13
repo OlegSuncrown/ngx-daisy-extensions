@@ -20,12 +20,17 @@ import { DXE_STYLE_CONTEXT } from '../styles/style-context';
 import type { DxeStyleContext } from '../styles/style-context';
 import { DxeStyledList } from '../styles/styled-list';
 import { DxeStyledPopup } from '../styles/styled-popup';
+import { DXE_SELECT_CONTEXT } from './select-context';
+import type { DxeSelectContext } from './select-context';
 import { DxeSelectPortal } from './select-portal';
 
 @Component({
   selector: 'dxe-select-root',
   imports: [OverlayModule, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, DxeStyledPopup, DxeStyledList],
-  providers: [{ provide: DXE_STYLE_CONTEXT, useExisting: forwardRef(() => DxeSelectRoot) }],
+  providers: [
+    { provide: DXE_STYLE_CONTEXT, useExisting: forwardRef(() => DxeSelectRoot) },
+    { provide: DXE_SELECT_CONTEXT, useExisting: forwardRef(() => DxeSelectRoot) },
+  ],
   template: `
     <ng-content />
 
@@ -70,7 +75,7 @@ import { DxeSelectPortal } from './select-portal';
     class: 'contents',
   },
 })
-export class DxeSelectRoot<V = unknown> implements DxeStyleContext {
+export class DxeSelectRoot<V = unknown> implements DxeStyleContext, DxeSelectContext {
   readonly positions = DXE_SELECT_POSITIONS;
   readonly value = model<V[]>([]);
   readonly size = input<DxeSize>('md');

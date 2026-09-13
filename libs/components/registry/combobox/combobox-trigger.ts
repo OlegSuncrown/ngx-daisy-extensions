@@ -1,5 +1,5 @@
 import { Combobox } from '@angular/aria/combobox';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { DxeStyledTrigger } from '../styles/styled-trigger';
 
 @Component({
@@ -13,10 +13,4 @@ import { DxeStyledTrigger } from '../styles/styled-trigger';
   ],
   template: `<ng-content />`,
 })
-export class DxeComboboxTrigger {
-  readonly combobox = inject(Combobox);
-
-  constructor() {
-    this.combobox.preserveContent.set(true);
-  }
-}
+export class DxeComboboxTrigger {}

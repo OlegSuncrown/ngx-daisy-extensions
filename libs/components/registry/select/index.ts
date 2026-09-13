@@ -10,6 +10,8 @@ import { DxeSelectTrigger } from './select-trigger';
 export { DxeClearButton } from '../shared/clear-button';
 export { DxeDropdownButton } from '../shared/dropdown-button';
 export { DxePlaceholder } from '../shared/placeholder';
+export { DXE_SELECT_CONTEXT } from './select-context';
+export type { DxeSelectContext } from './select-context';
 export { DxeSelectOption } from './select-option';
 export { DxeSelectOptionLabel } from './select-option-label';
 export { DxeSelectPortal } from './select-portal';

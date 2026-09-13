@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
+import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
 import { Listbox } from '@angular/aria/listbox';
 import { CdkConnectedOverlay, OverlayModule } from '@angular/cdk/overlay';
 import {
@@ -7,6 +7,7 @@ import {
   Component,
   computed,
   contentChild,
+  effect,
   forwardRef,
   input,
   model,
@@ -19,9 +20,10 @@ import { DxeEmptyState } from '../shared/empty-state';
 import type { DxeColor, DxeSize } from '../shared/model';
 import { DXE_SELECT_POSITIONS } from '../shared/select-positions';
 import { DXE_STYLE_CONTEXT } from '../styles/style-context';
-import type { DxeStyleContext } from '../styles/style-context';
 import { DxeStyledList } from '../styles/styled-list';
 import { DxeStyledPopup } from '../styles/styled-popup';
+import { DXE_COMBOBOX_CONTEXT } from './combobox-context';
+import type { DxeComboboxContext } from './combobox-context';
 import { DxeComboboxInput } from './combobox-input';
 import { DxeComboboxPortal } from './combobox-portal';
 import { DxeComboboxTrigger } from './combobox-trigger';
@@ -29,7 +31,10 @@ import { DxeComboboxTrigger } from './combobox-trigger';
 @Component({
   selector: 'dxe-combobox-root',
   imports: [OverlayModule, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, DxeStyledPopup, DxeStyledList],
-  providers: [{ provide: DXE_STYLE_CONTEXT, useExisting: forwardRef(() => DxeComboboxRoot) }],
+  providers: [
+    { provide: DXE_STYLE_CONTEXT, useExisting: forwardRef(() => DxeComboboxRoot) },
+    { provide: DXE_COMBOBOX_CONTEXT, useExisting: forwardRef(() => DxeComboboxRoot) },
+  ],
   template: `
     <ng-content />
 
@@ -90,7 +95,7 @@ import { DxeComboboxTrigger } from './combobox-trigger';
     class: 'contents',
   },
 })
-export class DxeComboboxRoot<V = unknown> implements DxeStyleContext {
+export class DxeComboboxRoot<V = unknown> implements DxeComboboxContext {
   readonly positions = DXE_SELECT_POSITIONS;
   readonly value = model<V[]>([]);
   readonly size = input<DxeSize>('md');
@@ -101,18 +106,24 @@ export class DxeComboboxRoot<V = unknown> implements DxeStyleContext {
 
   readonly commit = output();
 
-  readonly trigger = contentChild(DxeComboboxTrigger);
   readonly portal = contentChild(DxeComboboxPortal);
   readonly search = contentChild(DxeComboboxInput);
   readonly emptyState = contentChild(DxeEmptyState);
   readonly listbox = viewChild(Listbox);
   readonly overlay = viewChild(CdkConnectedOverlay);
-  readonly combobox = computed(() => this.trigger()?.combobox);
+  readonly combobox = contentChild(DxeComboboxTrigger, { read: Combobox });
   readonly expanded = computed(() => this.combobox()?.expanded() ?? false);
   readonly selection = signal<V[]>([]);
 
   constructor() {
     let justOpened = true;
+
+    effect(() => {
+      const combobox = this.combobox();
+      if (combobox) {
+        untracked(() => combobox.preserveContent.set(true));
+      }
+    });
 
     afterRenderEffect(() => {
       if (this.expanded()) {

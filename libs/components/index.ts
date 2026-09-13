@@ -1,5 +1,6 @@
 export { DxeComboboxImports } from './registry/combobox';
 export {
+  DXE_COMBOBOX_CONTEXT,
   DxeComboboxInput,
   DxeComboboxOption,
   DxeComboboxOptionLabel,
@@ -7,8 +8,17 @@ export {
   DxeComboboxRoot,
   DxeComboboxTrigger,
 } from './registry/combobox';
+export type { DxeComboboxContext } from './registry/combobox';
 export { DxeSelectImports } from './registry/select';
-export { DxeSelectOption, DxeSelectOptionLabel, DxeSelectPortal, DxeSelectRoot, DxeSelectTrigger } from './registry/select';
+export {
+  DXE_SELECT_CONTEXT,
+  DxeSelectOption,
+  DxeSelectOptionLabel,
+  DxeSelectPortal,
+  DxeSelectRoot,
+  DxeSelectTrigger,
+} from './registry/select';
+export type { DxeSelectContext } from './registry/select';
 export {
   DxeClearButton,
   DxeDropdownButton,
