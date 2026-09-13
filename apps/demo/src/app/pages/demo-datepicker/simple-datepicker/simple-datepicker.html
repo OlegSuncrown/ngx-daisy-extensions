@@ -1,6 +1,6 @@
 <fieldset class="fieldset mb-4">
   <legend class="fieldset-legend">Datepicker</legend>
-  <dxe-datepicker-root #picker>
+  <dxe-datepicker-root>
     <dxe-datepicker-trigger>
       <svg class="size-4 opacity-60 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5" />
@@ -37,12 +37,7 @@
         <thead>
           <tr>
             @for (day of weekdays(); track day.long) {
-              <th
-                role="columnheader"
-                scope="col"
-                class="text-xs font-medium text-base-content/60 text-center pb-2"
-                [attr.abbr]="day.long"
-              >
+              <th role="columnheader" scope="col" class="text-xs font-medium text-base-content/60 text-center pb-2" [attr.abbr]="day.long">
                 {{ day.narrow }}
               </th>
             }

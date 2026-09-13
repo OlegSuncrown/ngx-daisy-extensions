@@ -2,17 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, OverlayModule } from '@angular/cdk/overlay';
-import {
-  afterRenderEffect,
-  Component,
-  computed,
-  contentChild,
-  effect,
-  ElementRef,
-  input,
-  untracked,
-  viewChild,
-} from '@angular/core';
+import { afterRenderEffect, Component, computed, contentChild, effect, ElementRef, input, untracked, viewChild } from '@angular/core';
 import { provideDxeContext, type DxeContext } from '../injection-tokens';
 import type { DxeColor, DxeSize } from '../shared/model';
 import { DXE_SELECT_POSITIONS } from '../shared/select-positions';
@@ -87,8 +77,8 @@ export class DxeDatepickerRoot implements DxeContext {
   }
 
   close() {
-    this.dismiss();
-    this.focusInput();
+    this.combobox()?.expanded.set(false);
+    this.datepickerInput()?.focus();
   }
 
   dismiss() {
@@ -97,10 +87,6 @@ export class DxeDatepickerRoot implements DxeContext {
 
   toggle() {
     this.combobox()?.expanded.update((expanded) => !expanded);
-  }
-
-  focusInput() {
-    this.datepickerInput()?.focus();
   }
 
   protected handleWidgetKeydown(event: KeyboardEvent) {
