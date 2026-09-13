@@ -13,8 +13,6 @@ export { DxeClearButton } from '../shared/clear-button';
 export { DxeDropdownButton } from '../shared/dropdown-button';
 export { DxeEmptyState } from '../shared/empty-state';
 export { DxePlaceholder } from '../shared/placeholder';
-export { DXE_COMBOBOX_CONTEXT } from './combobox-context';
-export type { DxeComboboxContext } from './combobox-context';
 export { DxeComboboxInput } from './combobox-input';
 export { DxeComboboxOption } from './combobox-option';
 export { DxeComboboxOptionLabel } from './combobox-option-label';

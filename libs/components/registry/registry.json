@@ -1,6 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "items": {
+    "injection-tokens": {
+      "files": ["injection-tokens/index.ts"],
+      "registryDependencies": []
+    },
     "shared": {
       "files": [
         "shared/clear-button.ts",
@@ -12,7 +16,7 @@
         "shared/select-positions.ts",
         "shared/selection-indicator.ts"
       ],
-      "registryDependencies": ["styles"]
+      "registryDependencies": ["injection-tokens", "styles"]
     },
     "styles": {
       "files": [
@@ -23,23 +27,21 @@
         "styles/styled-popup.ts",
         "styles/styled-trigger.ts"
       ],
-      "registryDependencies": []
+      "registryDependencies": ["injection-tokens"]
     },
     "select": {
       "files": [
         "select/index.ts",
-        "select/select-context.ts",
         "select/select-option-label.ts",
         "select/select-option.ts",
         "select/select-portal.ts",
         "select/select-root.ts",
         "select/select-trigger.ts"
       ],
-      "registryDependencies": ["shared", "styles"]
+      "registryDependencies": ["injection-tokens", "shared", "styles"]
     },
     "combobox": {
       "files": [
-        "combobox/combobox-context.ts",
         "combobox/combobox-input.ts",
         "combobox/combobox-option-label.ts",
         "combobox/combobox-option.ts",
@@ -48,24 +50,18 @@
         "combobox/combobox-trigger.ts",
         "combobox/index.ts"
       ],
-      "registryDependencies": ["shared", "styles"]
+      "registryDependencies": ["injection-tokens", "shared", "styles"]
     },
     "datepicker": {
       "files": [
-        "datepicker/datepicker-context.ts",
-        "datepicker/datepicker-day.ts",
-        "datepicker/datepicker-grid.ts",
         "datepicker/datepicker-header.ts",
         "datepicker/datepicker-input.ts",
         "datepicker/datepicker-portal.ts",
         "datepicker/datepicker-root.ts",
         "datepicker/datepicker-trigger.ts",
-        "datepicker/datepicker-week.ts",
-        "datepicker/datepicker-weekday.ts",
-        "datepicker/datepicker-weekdays.ts",
         "datepicker/index.ts"
       ],
-      "registryDependencies": ["shared", "styles"]
+      "registryDependencies": ["injection-tokens", "shared", "styles"]
     }
   }
 }

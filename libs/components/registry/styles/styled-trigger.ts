@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input } from '@angular/core';
-import { DXE_STYLE_CONTEXT } from './style-context';
+import { DXE_CONTEXT } from '../injection-tokens';
 import type { DxeColor, DxeSize } from './style-context';
 
 const sizeClasses: Record<DxeSize, string> = {
@@ -30,7 +30,7 @@ const colorClasses: Record<DxeColor, string> = {
   },
 })
 export class DxeStyledTrigger {
-  private readonly context = inject(DXE_STYLE_CONTEXT, { optional: true });
+  private readonly context = inject(DXE_CONTEXT, { optional: true });
 
   readonly size = input<DxeSize>();
   readonly color = input<DxeColor>();

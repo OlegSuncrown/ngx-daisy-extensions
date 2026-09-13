@@ -163,10 +163,10 @@ export class SimpleCombobox {
 
 ### Datepicker
 
-The datepicker is date-library agnostic. The library owns overlay, combobox, and grid plumbing. You own date math, formatting, and the calendar cells. The demo uses Angular Material's `DateAdapter` for that consumer-side logic.
+The datepicker is date-library agnostic. The library owns overlay and combobox plumbing. You own date math, formatting, and the calendar grid. The demo uses Angular Material's `DateAdapter` and Angular ARIA `ngGrid` for that consumer-side logic.
 
 ```html
-<dxe-datepicker-root #picker [(value)]="selectedDate" [compareWith]="isSameDay">
+<dxe-datepicker-root #picker>
   <dxe-datepicker-trigger>
     <input
       type="text"
@@ -182,23 +182,44 @@ The datepicker is date-library agnostic. The library owns overlay, combobox, and
       <div aria-live="polite" class="sr-only">{{ activeMonthAnnouncement() }}</div>
       <div class="font-semibold text-sm">{{ monthYearLabel() }}</div>
     </dxe-datepicker-header>
-    <dxe-datepicker-grid>
-      <dxe-datepicker-weekdays>
-        @for (day of weekdays(); track day.long) {
-          <dxe-datepicker-weekday [label]="day.long">{{ day.narrow }}</dxe-datepicker-weekday>
-        }
-      </dxe-datepicker-weekdays>
-      @for (week of weeks(); track $index) {
-        <dxe-datepicker-week>
-          @for (day of week; track $index) {
-            <dxe-datepicker-day [value]="day.date" [label]="day.ariaLabel" [today]="day.today"
-              (keydown)="onDayKeydown($event, day.date)">
-              {{ day.displayName }}
-            </dxe-datepicker-day>
+    <table
+      #gridTable
+      tabindex="-1"
+      ngGrid
+      colWrap="continuous"
+      rowWrap="nowrap"
+      [enableSelection]="true"
+      selectionMode="explicit"
+      (keydown)="onGridKeydown($event)"
+    >
+      <thead>
+        <tr>
+          @for (day of weekdays(); track day.long) {
+            <th role="columnheader" scope="col" [attr.abbr]="day.long">{{ day.narrow }}</th>
           }
-        </dxe-datepicker-week>
-      }
-    </dxe-datepicker-grid>
+        </tr>
+      </thead>
+      <tbody>
+        @for (week of weeks(); track $index) {
+          <tr ngGridRow>
+            @for (day of week; track $index) {
+              <td ngGridCell [selected]="day.selected">
+                <button
+                  ngGridCellWidget
+                  type="button"
+                  [attr.data-day]="day.displayName"
+                  [attr.data-focus-target]="isFocusTarget(day.date)"
+                  [attr.aria-label]="day.ariaLabel + (day.selected ? ', Selected' : '')"
+                  (click)="selectDate(day, $event)"
+                >
+                  {{ day.displayName }}
+                </button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
   </ng-container>
 </dxe-datepicker-root>
 ```

@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, contentChild, inject } from '@angular/core';
+import { DXE_CONTEXT } from '../injection-tokens';
 import { DxeStyledTrigger } from '../styles/styled-trigger';
-import { DXE_DATEPICKER_CONTEXT } from './datepicker-context';
+import { DxeDatepickerInput } from './datepicker-input';
 
 @Component({
   selector: 'dxe-datepicker-trigger',
@@ -13,10 +14,11 @@ import { DXE_DATEPICKER_CONTEXT } from './datepicker-context';
   },
 })
 export class DxeDatepickerTrigger {
-  private readonly context = inject(DXE_DATEPICKER_CONTEXT, { optional: true });
+  private readonly context = inject(DXE_CONTEXT, { optional: true });
+  private readonly datepickerInput = contentChild(DxeDatepickerInput);
 
   protected onClick() {
     this.context?.open();
-    this.context?.focusInput();
+    this.datepickerInput()?.focus();
   }
 }

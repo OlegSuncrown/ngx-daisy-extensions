@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
+import { Grid, GridCell, GridCellWidget, GridRow } from '@angular/aria/grid';
+import { Component, computed, effect, ElementRef, inject, signal, untracked, viewChild, viewChildren } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
 import { DxeDatepickerImports, DxeDatepickerRoot } from 'ngx-daisy-extensions';
 
@@ -9,12 +10,22 @@ interface CalendarCell {
   displayName: string;
   ariaLabel: string;
   date: Date;
+  selected: boolean;
   today: boolean;
+}
+
+interface GridFocusReset {
+  gridBehavior?: {
+    focusBehavior?: {
+      activeCell: { set(value: undefined): void };
+      activeCoords: { set(value: { row: number; col: number }): void };
+    };
+  };
 }
 
 @Component({
   selector: 'app-simple-datepicker',
-  imports: [DxeDatepickerImports, DatePipe],
+  imports: [DxeDatepickerImports, DatePipe, Grid, GridRow, GridCell, GridCellWidget],
   providers: [provideNativeDateAdapter()],
   templateUrl: './simple-datepicker.html',
   host: {
@@ -24,13 +35,15 @@ interface CalendarCell {
 export class SimpleDatepicker {
   private readonly dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
   private readonly dateFormats = inject(MAT_DATE_FORMATS);
+  private readonly dayButtons = viewChildren(GridCellWidget);
 
-  readonly picker = viewChild.required<DxeDatepickerRoot<Date>>(DxeDatepickerRoot);
+  readonly picker = viewChild.required<DxeDatepickerRoot>(DxeDatepickerRoot);
+  readonly grid = viewChild(Grid);
+  readonly gridTable = viewChild<ElementRef<HTMLElement>>('gridTable');
   readonly selectedDate = signal<Date | null>(null);
   readonly inputValue = signal('');
   readonly viewMonth = signal(this.dateAdapter.today());
-
-  readonly isSameDay = (a: Date, b: Date) => this.dateAdapter.compareDate(a, b) === 0;
+  readonly focusTargetDate = signal<Date | null>(null);
 
   readonly monthYearLabel = computed(() =>
     this.dateAdapter.format(this.viewMonth(), this.dateFormats.display.monthYearLabel).toLocaleUpperCase(),
@@ -74,6 +87,7 @@ export class SimpleDatepicker {
 
   readonly weeks = computed(() => {
     const viewMonth = this.viewMonth();
+    const selectedDate = this.selectedDate();
     const daysInMonth = this.dateAdapter.getNumDaysInMonth(viewMonth);
     const dateNames = this.dateAdapter.getDateNames();
     const today = this.dateAdapter.today();
@@ -95,6 +109,7 @@ export class SimpleDatepicker {
         displayName: dateNames[i],
         ariaLabel: this.dateAdapter.format(date, this.dateFormats.display.dateA11yLabel),
         date,
+        selected: selectedDate != null && this.dateAdapter.compareDate(date, selectedDate) === 0,
         today: this.dateAdapter.compareDate(date, today) === 0,
       });
     }
@@ -123,6 +138,26 @@ export class SimpleDatepicker {
         }
       });
     });
+
+    effect(() => {
+      const target = this.focusTargetDate();
+      if (!target) {
+        return;
+      }
+
+      const targetBtn = this.dayButtons().find((btn) => btn.element.getAttribute('data-focus-target') === 'true');
+      if (targetBtn) {
+        targetBtn.element.focus();
+        Promise.resolve().then(() => {
+          untracked(() => this.focusTargetDate.set(null));
+        });
+      }
+    });
+  }
+
+  isFocusTarget(date: Date) {
+    const target = this.focusTargetDate();
+    return target ? this.dateAdapter.compareDate(date, target) === 0 : false;
   }
 
   onInput(value: string) {
@@ -144,7 +179,7 @@ export class SimpleDatepicker {
     }
 
     if (event.key === 'ArrowDown' && this.picker().expanded()) {
-      this.picker().focusGrid();
+      this.focusGrid();
     }
   }
 
@@ -156,7 +191,17 @@ export class SimpleDatepicker {
     this.viewMonth.set(this.dateAdapter.addCalendarMonths(this.viewMonth(), 1));
   }
 
-  onDayKeydown(event: KeyboardEvent, date: Date) {
+  selectDate(day: CalendarCell, event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    this.selectedDate.set(day.date);
+    this.picker().close();
+  }
+
+  onGridKeydown(event: KeyboardEvent) {
     const arrowUp = event.key === 'ArrowUp';
     const arrowDown = event.key === 'ArrowDown';
     const arrowLeft = event.key === 'ArrowLeft';
@@ -170,38 +215,44 @@ export class SimpleDatepicker {
       return;
     }
 
-    const day = date.getDate();
+    const dayAttr = (event.target as HTMLElement).getAttribute('data-day');
+    if (!dayAttr) {
+      return;
+    }
+
+    const day = Number(dayAttr);
     const year = this.dateAdapter.getYear(this.viewMonth());
     const month = this.dateAdapter.getMonth(this.viewMonth());
     const viewMonthNumDays = this.dateAdapter.getNumDaysInMonth(this.viewMonth());
+    const currentFocusedDate = this.dateAdapter.createDate(year, month, day);
     let targetDate: Date | null = null;
 
     switch (event.key) {
       case 'ArrowLeft':
         if (day === 1) {
-          targetDate = this.dateAdapter.addCalendarDays(date, -1);
+          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, -1);
         }
         break;
       case 'ArrowRight':
         if (day === viewMonthNumDays) {
-          targetDate = this.dateAdapter.addCalendarDays(date, 1);
+          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, 1);
         }
         break;
       case 'ArrowUp':
         if (day <= 7) {
-          targetDate = this.dateAdapter.addCalendarDays(date, -7);
+          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, -7);
         }
         break;
       case 'ArrowDown':
         if (day > viewMonthNumDays - 7) {
-          targetDate = this.dateAdapter.addCalendarDays(date, 7);
+          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, 7);
         }
         break;
       case 'PageUp':
-        targetDate = this.dateAdapter.addCalendarMonths(date, event.ctrlKey ? -12 : -1);
+        targetDate = this.dateAdapter.addCalendarMonths(currentFocusedDate, event.ctrlKey ? -12 : -1);
         break;
       case 'PageDown':
-        targetDate = this.dateAdapter.addCalendarMonths(date, event.ctrlKey ? 12 : 1);
+        targetDate = this.dateAdapter.addCalendarMonths(currentFocusedDate, event.ctrlKey ? 12 : 1);
         break;
       case 'Home':
         targetDate = this.dateAdapter.createDate(year, month, 1);
@@ -213,9 +264,19 @@ export class SimpleDatepicker {
 
     if (targetDate) {
       event.preventDefault();
-      event.stopPropagation();
+      event.stopImmediatePropagation();
       this.navigateToDate(targetDate);
     }
+  }
+
+  private focusGrid() {
+    setTimeout(() => {
+      const tableEl = this.gridTable()?.nativeElement;
+      if (tableEl) {
+        const tabbable = tableEl.querySelector('[tabindex="0"]') as HTMLElement | null;
+        (tabbable ?? tableEl).focus();
+      }
+    });
   }
 
   private navigateToDate(targetDate: Date) {
@@ -226,11 +287,16 @@ export class SimpleDatepicker {
     const monthShift = currentMonth !== targetMonth || currentYear !== targetYear;
 
     if (monthShift) {
-      this.picker().resetFocus();
+      this.gridTable()?.nativeElement.focus();
+      const focusBehavior = (this.grid()?._pattern as unknown as GridFocusReset | undefined)?.gridBehavior?.focusBehavior;
+      if (focusBehavior) {
+        focusBehavior.activeCell.set(undefined);
+        focusBehavior.activeCoords.set({ row: -1, col: -1 });
+      }
       this.viewMonth.set(targetDate);
     }
 
-    this.picker().focusDay(targetDate);
+    this.focusTargetDate.set(targetDate);
   }
 
   private formatDate(date: Date) {

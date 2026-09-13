@@ -1,6 +1,6 @@
 import { Combobox } from '@angular/aria/combobox';
 import { Directive, ElementRef, inject } from '@angular/core';
-import { DXE_DATEPICKER_CONTEXT } from './datepicker-context';
+import { DXE_CONTEXT } from '../injection-tokens';
 
 @Directive({
   selector: 'input[dxeDatepickerInput]',
@@ -18,7 +18,7 @@ import { DXE_DATEPICKER_CONTEXT } from './datepicker-context';
   },
 })
 export class DxeDatepickerInput {
-  private readonly context = inject(DXE_DATEPICKER_CONTEXT, { optional: true });
+  private readonly context = inject(DXE_CONTEXT, { optional: true });
   private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
   readonly combobox = inject(Combobox);

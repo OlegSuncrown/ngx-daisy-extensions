@@ -7,30 +7,23 @@ import {
   Component,
   computed,
   contentChild,
-  forwardRef,
   input,
   model,
   output,
   untracked,
   viewChild,
 } from '@angular/core';
+import { provideDxeContext, type DxeContext } from '../injection-tokens';
 import type { DxeColor, DxeSize } from '../shared/model';
 import { DXE_SELECT_POSITIONS } from '../shared/select-positions';
-import { DXE_STYLE_CONTEXT } from '../styles/style-context';
-import type { DxeStyleContext } from '../styles/style-context';
 import { DxeStyledList } from '../styles/styled-list';
 import { DxeStyledPopup } from '../styles/styled-popup';
-import { DXE_SELECT_CONTEXT } from './select-context';
-import type { DxeSelectContext } from './select-context';
 import { DxeSelectPortal } from './select-portal';
 
 @Component({
   selector: 'dxe-select-root',
   imports: [OverlayModule, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, DxeStyledPopup, DxeStyledList],
-  providers: [
-    { provide: DXE_STYLE_CONTEXT, useExisting: forwardRef(() => DxeSelectRoot) },
-    { provide: DXE_SELECT_CONTEXT, useExisting: forwardRef(() => DxeSelectRoot) },
-  ],
+  providers: [provideDxeContext(() => DxeSelectRoot)],
   template: `
     <ng-content />
 
@@ -44,8 +37,8 @@ import { DxeSelectPortal } from './select-portal';
           positions,
         }"
         [cdkConnectedOverlayOpen]="expanded()"
-        (overlayOutsideClick)="close()"
-        (detach)="close()"
+        (overlayOutsideClick)="dismiss()"
+        (detach)="dismiss()"
       >
         <ng-template ngComboboxPopup [combobox]="combobox">
           <div dxeStyledPopup [style.max-height]="maxHeight()">
@@ -75,7 +68,7 @@ import { DxeSelectPortal } from './select-portal';
     class: 'contents',
   },
 })
-export class DxeSelectRoot<V = unknown> implements DxeStyleContext, DxeSelectContext {
+export class DxeSelectRoot<V = unknown> implements DxeContext {
   readonly positions = DXE_SELECT_POSITIONS;
   readonly value = model<V[]>([]);
   readonly size = input<DxeSize>('md');
@@ -118,6 +111,10 @@ export class DxeSelectRoot<V = unknown> implements DxeStyleContext, DxeSelectCon
   }
 
   close() {
+    this.combobox()?.expanded.set(false);
+  }
+
+  dismiss() {
     this.combobox()?.expanded.set(false);
   }
 
