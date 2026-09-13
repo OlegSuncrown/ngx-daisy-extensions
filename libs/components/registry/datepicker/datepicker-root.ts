@@ -51,16 +51,9 @@ import { DxeDatepickerTrigger } from './datepicker-trigger';
         (detach)="dismiss()"
       >
         <ng-template ngComboboxPopup [combobox]="combobox" popupType="dialog">
-          <div class="w-80">
-            <div dxeStyledPopup>
-              <div
-                ngComboboxWidget
-                cdkTrapFocus
-                [cdkTrapFocusAutoCapture]="false"
-                (keydown)="onWidgetKeydown($event)"
-              >
-                <ng-container [ngTemplateOutlet]="portal()?.templateRef ?? null" [ngTemplateOutletInjector]="'outlet'" />
-              </div>
+          <div dxeStyledPopup class="w-80!">
+            <div ngComboboxWidget cdkTrapFocus [cdkTrapFocusAutoCapture]="false" (keydown)="onWidgetKeydown($event)">
+              <ng-container [ngTemplateOutlet]="portal()?.templateRef ?? null" [ngTemplateOutletInjector]="'outlet'" />
             </div>
           </div>
         </ng-template>
