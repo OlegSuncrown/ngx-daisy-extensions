@@ -9,6 +9,21 @@ export {
   DxeComboboxTrigger,
 } from './registry/combobox';
 export type { DxeComboboxContext } from './registry/combobox';
+export { DxeDatepickerImports } from './registry/datepicker';
+export { DxeDatepickerGrid } from './registry/datepicker/datepicker-grid';
+export {
+  DXE_DATEPICKER_CONTEXT,
+  DxeDatepickerDay,
+  DxeDatepickerHeader,
+  DxeDatepickerInput,
+  DxeDatepickerPortal,
+  DxeDatepickerRoot,
+  DxeDatepickerTrigger,
+  DxeDatepickerWeek,
+  DxeDatepickerWeekday,
+  DxeDatepickerWeekdays,
+} from './registry/datepicker';
+export type { DxeDatepickerContext, DxeDatepickerDayHandle, DxeDatepickerGridHandle } from './registry/datepicker';
 export { DxeSelectImports } from './registry/select';
 export {
   DXE_SELECT_CONTEXT,

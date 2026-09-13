@@ -49,6 +49,23 @@
         "combobox/index.ts"
       ],
       "registryDependencies": ["shared", "styles"]
+    },
+    "datepicker": {
+      "files": [
+        "datepicker/datepicker-context.ts",
+        "datepicker/datepicker-day.ts",
+        "datepicker/datepicker-grid.ts",
+        "datepicker/datepicker-header.ts",
+        "datepicker/datepicker-input.ts",
+        "datepicker/datepicker-portal.ts",
+        "datepicker/datepicker-root.ts",
+        "datepicker/datepicker-trigger.ts",
+        "datepicker/datepicker-week.ts",
+        "datepicker/datepicker-weekday.ts",
+        "datepicker/datepicker-weekdays.ts",
+        "datepicker/index.ts"
+      ],
+      "registryDependencies": ["shared", "styles"]
     }
   }
 }

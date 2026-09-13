@@ -1,0 +1,20 @@
+<section>
+  <h1 class="text-2xl font-bold">Datepicker</h1>
+  <p class="text-sm text-gray-500 mb-4">Accessible datepicker with an editable combobox input and a calendar grid popup.</p>
+
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="card bg-base-100 card-border border-base-content/5 card-sm relative">
+        <app-demo-code
+          class="absolute top-1 right-1 z-10"
+          title="Datepicker"
+          [htmlCode]="simpleDatepickerHtml"
+          [tsCode]="simpleDatepickerTs"
+        />
+        <div class="card-body">
+          <app-simple-datepicker />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

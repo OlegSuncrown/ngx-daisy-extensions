@@ -1,0 +1,66 @@
+<fieldset class="fieldset mb-4">
+  <legend class="fieldset-legend">Datepicker</legend>
+  <dxe-datepicker-root #picker [(value)]="selectedDate" [compareWith]="isSameDay">
+    <dxe-datepicker-trigger>
+      <svg class="size-4 opacity-60 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+        <path d="M2 6.5h12M5 2v2.5M11 2v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <input
+        type="text"
+        dxeDatepickerInput
+        placeholder="Pick a date..."
+        [(value)]="inputValue"
+        (input)="onInput(inputValue())"
+        (keydown)="onInputKeydown($event)"
+      />
+    </dxe-datepicker-trigger>
+
+    <ng-container *dxeDatepickerPortal>
+      <dxe-datepicker-header (previous)="prevMonth()" (next)="nextMonth()">
+        <div aria-live="polite" class="sr-only">{{ activeMonthAnnouncement() }}</div>
+        <div class="font-semibold text-sm">{{ monthYearLabel() }}</div>
+      </dxe-datepicker-header>
+
+      <dxe-datepicker-grid>
+        <dxe-datepicker-weekdays>
+          @for (day of weekdays(); track day.long) {
+            <dxe-datepicker-weekday [label]="day.long">{{ day.narrow }}</dxe-datepicker-weekday>
+          }
+        </dxe-datepicker-weekdays>
+
+        @for (week of weeks(); track $index) {
+          <dxe-datepicker-week>
+            @if ($first) {
+              @for (day of daysFromPrevMonth(); track $index) {
+                <dxe-datepicker-day disabled>{{ day }}</dxe-datepicker-day>
+              }
+            }
+            @for (day of week; track $index) {
+              <dxe-datepicker-day
+                [value]="day.date"
+                [label]="day.ariaLabel"
+                [today]="day.today"
+                (keydown)="onDayKeydown($event, day.date)"
+              >
+                {{ day.displayName }}
+              </dxe-datepicker-day>
+            }
+            @if ($last) {
+              @for (day of daysInNextMonth(); track $index) {
+                <dxe-datepicker-day disabled>{{ day }}</dxe-datepicker-day>
+              }
+            }
+          </dxe-datepicker-week>
+        }
+      </dxe-datepicker-grid>
+    </ng-container>
+  </dxe-datepicker-root>
+  <span class="label">
+    @if (selectedDate(); as date) {
+      Selected: {{ date | date: 'mediumDate' }}
+    } @else {
+      Format follows the current locale
+    }
+  </span>
+</fieldset>

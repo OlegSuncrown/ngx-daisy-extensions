@@ -6,7 +6,7 @@
 
 ## About
 
-`ngx-daisy-extensions` provides Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI, with no extra dependencies.
+`ngx-daisy-extensions` provides Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI.
 
 ## Installation
 
@@ -51,7 +51,7 @@ That file has no component CSS. It only tells your Tailwind build which class na
 Import the component groups into standalone components:
 
 ```ts
-import { DxeComboboxImports, DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
+import { DxeComboboxImports, DxeDatepickerImports, DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 ```
 
 ### Select
@@ -157,12 +157,54 @@ export class SimpleCombobox {
 }
 ```
 
+### Datepicker
+
+The datepicker is date-library agnostic. The library owns overlay, combobox, and grid plumbing. You own date math, formatting, and the calendar cells. The demo uses Angular Material's `DateAdapter` for that consumer-side logic.
+
+```html
+<dxe-datepicker-root #picker [(value)]="selectedDate" [compareWith]="isSameDay">
+  <dxe-datepicker-trigger>
+    <input
+      type="text"
+      dxeDatepickerInput
+      placeholder="Pick a date..."
+      [(value)]="inputValue"
+      (input)="onInput(inputValue())"
+      (keydown)="onInputKeydown($event)"
+    />
+  </dxe-datepicker-trigger>
+  <ng-container *dxeDatepickerPortal>
+    <dxe-datepicker-header (previous)="prevMonth()" (next)="nextMonth()">
+      <div aria-live="polite" class="sr-only">{{ activeMonthAnnouncement() }}</div>
+      <div class="font-semibold text-sm">{{ monthYearLabel() }}</div>
+    </dxe-datepicker-header>
+    <dxe-datepicker-grid>
+      <dxe-datepicker-weekdays>
+        @for (day of weekdays(); track day.long) {
+          <dxe-datepicker-weekday [label]="day.long">{{ day.narrow }}</dxe-datepicker-weekday>
+        }
+      </dxe-datepicker-weekdays>
+      @for (week of weeks(); track $index) {
+        <dxe-datepicker-week>
+          @for (day of week; track $index) {
+            <dxe-datepicker-day [value]="day.date" [label]="day.ariaLabel" [today]="day.today"
+              (keydown)="onDayKeydown($event, day.date)">
+              {{ day.displayName }}
+            </dxe-datepicker-day>
+          }
+        </dxe-datepicker-week>
+      }
+    </dxe-datepicker-grid>
+  </ng-container>
+</dxe-datepicker-root>
+```
+
 ## Development
 
 The demo imports registry sources through a TypeScript path alias. Consumer projects resolve the same import from `node_modules/ngx-daisy-extensions`.
 
 ```ts
-import { DxeComboboxImports, DxeSelectImports } from 'ngx-daisy-extensions';
+import { DxeComboboxImports, DxeDatepickerImports, DxeSelectImports } from 'ngx-daisy-extensions';
 ```
 
 Publish the Angular package from the workspace root:
