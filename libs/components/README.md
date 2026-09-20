@@ -6,7 +6,7 @@
 
 ## About
 
-`ngx-daisy-extensions` provides Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI, with no extra dependencies.
+`ngx-daisy-extensions` provides Angular-first components built with Angular ARIA and the Angular CDK, styled with Tailwind CSS and DaisyUI.
 
 ## Installation
 
@@ -51,7 +51,7 @@ That file has no component CSS. It only tells your Tailwind build which class na
 Import the component groups into standalone components:
 
 ```ts
-import { DxeComboboxImports, DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
+import { DxeComboboxImports, DxeDatepickerImports, DxeDatepickerService, DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 ```
 
 ### Select
@@ -161,12 +161,113 @@ export class SimpleCombobox {
 </dxe-combobox-root>
 ```
 
+### Datepicker
+
+The overlay and calendar grid are date-library agnostic. Provide Angular Material's `DateAdapter` (native, Moment, Luxon, and so on) and `DxeDatepickerService` for calendar math, formatting, and month navigation. You still own selection state and the calendar template.
+
+```bash
+npm install @angular/material
+```
+
+```ts
+import { Component, inject, signal } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { DxeDatepickerImports, DxeDatepickerService } from 'ngx-daisy-extensions';
+
+@Component({
+  selector: 'app-simple-datepicker',
+  imports: [DxeDatepickerImports],
+  providers: [provideNativeDateAdapter(), DxeDatepickerService],
+  templateUrl: './simple-datepicker.html',
+})
+export class SimpleDatepicker {
+  readonly datepickerService = inject(DxeDatepickerService);
+  readonly selectedDate = signal<Date | null>(null);
+  readonly inputValue = signal('');
+  readonly viewMonth = this.datepickerService.viewMonth;
+  readonly monthYearLabel = this.datepickerService.monthYearLabel;
+  readonly weekdays = this.datepickerService.weekdays;
+  readonly weeks = this.datepickerService.weeks;
+}
+```
+
+```html
+<dxe-datepicker-root #picker>
+  <dxe-datepicker-trigger>
+    <input
+      type="text"
+      dxeDatepickerInput
+      placeholder="Pick a date..."
+      [(value)]="inputValue"
+      (input)="onInput(inputValue())"
+      (keydown)="onInputKeydown($event)"
+    />
+  </dxe-datepicker-trigger>
+  <ng-container *dxeDatepickerPortal>
+    <dxe-datepicker-header (previous)="prevMonth()" (next)="nextMonth()">
+      <div aria-live="polite" class="sr-only">{{ activeMonthAnnouncement() }}</div>
+      <div class="font-semibold text-sm">{{ monthYearLabel() }}</div>
+    </dxe-datepicker-header>
+    <table
+      #gridTable
+      tabindex="-1"
+      dxeDatepickerGrid
+      colWrap="continuous"
+      rowWrap="nowrap"
+      [enableSelection]="true"
+      selectionMode="explicit"
+      (gridKeydown)="onGridKeydown($event)"
+    >
+      <thead>
+        <tr>
+          @for (day of weekdays(); track day.long) {
+            <th dxeDatepickerGridColumnHeader [attr.abbr]="day.long">{{ day.narrow }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (week of weeks(); track $index) {
+          <tr ngGridRow>
+            @for (day of week; track $index) {
+              <td dxeDatepickerGridCell [selected]="day.selected">
+                <button
+                   dxeDatepickerGridCellWidget
+                  [displayName]="day.displayName"
+                  [selected]="day.selected"
+                  [today]="day.today"
+                  [focusTargetActive]="isFocusTarget(day.date)"
+                  [ariaLabel]="day.ariaLabel"
+                  (dateSelect)="selectDate(day, $event)"
+                >
+                  {{ day.displayName }}
+                </button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </ng-container>
+</dxe-datepicker-root>
+```
+
+Use `dxeDatepickerGridCell` for adjacent-month filler cells. Disabled cells are styled automatically;
+set the inherited grid-cell inputs explicitly:
+
+```html
+<td dxeDatepickerGridCell [disabled]="true" [tabindex]="-1">
+  {{ day }}
+</td>
+```
+
+When keyboard navigation leaves the visible month, call `resetFocus()` on `DxeDatepickerGrid` so the grid does not keep a stale active cell.
+
 ## Development
 
 The demo imports registry sources through a TypeScript path alias. Consumer projects resolve the same import from `node_modules/ngx-daisy-extensions`.
 
 ```ts
-import { DxeComboboxImports, DxeSelectImports } from 'ngx-daisy-extensions';
+import { DxeComboboxImports, DxeDatepickerImports, DxeSelectImports } from 'ngx-daisy-extensions';
 ```
 
 Publish the Angular package from the workspace root:

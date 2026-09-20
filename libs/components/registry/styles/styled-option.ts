@@ -1,6 +1,6 @@
 import { Option } from '@angular/aria/listbox';
 import { computed, Directive, inject, input } from '@angular/core';
-import { DXE_STYLE_CONTEXT } from './style-context';
+import { DXE_CONTEXT } from '../injection-tokens';
 import type { DxeColor, DxeSize } from './style-context';
 
 const sizeClasses: Record<DxeSize, string> = {
@@ -24,32 +24,32 @@ const hoverClasses: Record<DxeColor, string> = {
 };
 
 const activeClasses: Record<DxeColor, string> = {
-  ghost: 'bg-base-content/8 outline-2 -outline-offset-2 outline-base-content/12',
-  primary: 'bg-primary/8 outline-2 -outline-offset-2 outline-primary/20',
-  secondary: 'bg-secondary/8 outline-2 -outline-offset-2 outline-secondary/20',
-  accent: 'bg-accent/8 outline-2 -outline-offset-2 outline-accent/20',
-  neutral: 'bg-neutral/8 outline-2 -outline-offset-2 outline-neutral/20',
-  info: 'bg-info/8 outline-2 -outline-offset-2 outline-info/20',
-  success: 'bg-success/8 outline-2 -outline-offset-2 outline-success/20',
-  warning: 'bg-warning/8 outline-2 -outline-offset-2 outline-warning/20',
-  error: 'bg-error/8 outline-2 -outline-offset-2 outline-error/20',
+  ghost: 'bg-base-content/6',
+  primary: 'bg-primary/6',
+  secondary: 'bg-secondary/6',
+  accent: 'bg-accent/6',
+  neutral: 'bg-neutral/6',
+  info: 'bg-info/6',
+  success: 'bg-success/6',
+  warning: 'bg-warning/6',
+  error: 'bg-error/6',
 };
 
 const selectedClasses: Record<DxeColor, string> = {
-  ghost: 'bg-base-content/10',
-  primary: 'bg-primary/10',
-  secondary: 'bg-secondary/10',
-  accent: 'bg-accent/10',
-  neutral: 'bg-neutral/10',
-  info: 'bg-info/10',
-  success: 'bg-success/10',
-  warning: 'bg-warning/10',
-  error: 'bg-error/10',
+  ghost: 'bg-base-content/10 outline-2 -outline-offset-2 outline-base-content/12',
+  primary: 'bg-primary/10 outline-2 -outline-offset-2 outline-primary/20',
+  secondary: 'bg-secondary/10 outline-2 -outline-offset-2 outline-secondary/20',
+  accent: 'bg-accent/10 outline-2 -outline-offset-2 outline-accent/20',
+  neutral: 'bg-neutral/10 outline-2 -outline-offset-2 outline-neutral/20',
+  info: 'bg-info/10 outline-2 -outline-offset-2 outline-info/20',
+  success: 'bg-success/10 outline-2 -outline-offset-2 outline-success/20',
+  warning: 'bg-warning/10 outline-2 -outline-offset-2 outline-warning/20',
+  error: 'bg-error/10 outline-2 -outline-offset-2 outline-error/20',
 };
 
 const defaultHoverClass = 'hover:bg-base-content/7';
-const defaultActiveClass = 'bg-base-content/8 outline-2 -outline-offset-2 outline-base-content/12';
-const defaultSelectedClass = 'bg-base-content/10 text-base-content';
+const defaultActiveClass = 'bg-base-content/6';
+const defaultSelectedClass = 'bg-base-content/10 text-base-content outline-2 -outline-offset-2 outline-base-content/12';
 
 @Directive({
   selector: '[dxeStyledOption]',
@@ -58,7 +58,7 @@ const defaultSelectedClass = 'bg-base-content/10 text-base-content';
   },
 })
 export class DxeStyledOption {
-  private readonly context = inject(DXE_STYLE_CONTEXT, { optional: true });
+  private readonly context = inject(DXE_CONTEXT, { optional: true });
   private readonly option = inject(Option);
 
   readonly size = input<DxeSize>();

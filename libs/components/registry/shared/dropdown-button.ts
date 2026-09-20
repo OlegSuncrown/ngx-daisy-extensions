@@ -1,5 +1,5 @@
-import { Combobox } from '@angular/aria/combobox';
 import { Component, computed, inject, input } from '@angular/core';
+import { DXE_CONTEXT } from '../injection-tokens';
 
 @Component({
   selector: 'dxe-dropdown-button',
@@ -17,9 +17,9 @@ import { Component, computed, inject, input } from '@angular/core';
   `,
 })
 export class DxeDropdownButton {
-  private readonly combobox = inject(Combobox, { optional: true });
+  private readonly context = inject(DXE_CONTEXT, { optional: true });
 
   readonly expanded = input<boolean>();
 
-  protected readonly isExpanded = computed(() => this.expanded() ?? this.combobox?.expanded() ?? false);
+  protected readonly isExpanded = computed(() => this.expanded() ?? this.context?.expanded() ?? false);
 }

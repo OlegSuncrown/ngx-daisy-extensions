@@ -8,7 +8,6 @@ import {
   computed,
   contentChild,
   effect,
-  forwardRef,
   input,
   model,
   output,
@@ -16,14 +15,12 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { provideDxeContext, type DxeContext } from '../injection-tokens';
 import { DxeEmptyState } from '../shared/empty-state';
 import type { DxeColor, DxeSize } from '../shared/model';
 import { DXE_SELECT_POSITIONS } from '../shared/select-positions';
-import { DXE_STYLE_CONTEXT } from '../styles/style-context';
 import { DxeStyledList } from '../styles/styled-list';
 import { DxeStyledPopup } from '../styles/styled-popup';
-import { DXE_COMBOBOX_CONTEXT } from './combobox-context';
-import type { DxeComboboxContext } from './combobox-context';
 import { DxeComboboxInput } from './combobox-input';
 import { DxeComboboxPortal } from './combobox-portal';
 import { DxeComboboxTrigger } from './combobox-trigger';
@@ -31,10 +28,7 @@ import { DxeComboboxTrigger } from './combobox-trigger';
 @Component({
   selector: 'dxe-combobox-root',
   imports: [OverlayModule, ComboboxPopup, ComboboxWidget, Listbox, NgTemplateOutlet, DxeStyledPopup, DxeStyledList],
-  providers: [
-    { provide: DXE_STYLE_CONTEXT, useExisting: forwardRef(() => DxeComboboxRoot) },
-    { provide: DXE_COMBOBOX_CONTEXT, useExisting: forwardRef(() => DxeComboboxRoot) },
-  ],
+  providers: [provideDxeContext(() => DxeComboboxRoot)],
   template: `
     <ng-content />
 
@@ -95,7 +89,7 @@ import { DxeComboboxTrigger } from './combobox-trigger';
     class: 'contents',
   },
 })
-export class DxeComboboxRoot<V = unknown> implements DxeComboboxContext {
+export class DxeComboboxRoot<V = unknown> implements DxeContext {
   readonly positions = DXE_SELECT_POSITIONS;
   readonly value = model<V[]>([]);
   readonly size = input<DxeSize>('md');
@@ -165,7 +159,8 @@ export class DxeComboboxRoot<V = unknown> implements DxeComboboxContext {
   }
 
   close() {
-    this.dismiss();
+    this.combobox()?.expanded.set(false);
+    this.search()?.combobox.value.set('');
     this.combobox()?.element.focus();
   }
 
@@ -180,7 +175,7 @@ export class DxeComboboxRoot<V = unknown> implements DxeComboboxContext {
 
   protected onCommit() {
     const selected = this.selection();
-    if (selected.length === 0) return;
+    if (!this.multi() && selected.length === 0) return;
 
     this.value.set(selected);
     this.commit.emit();

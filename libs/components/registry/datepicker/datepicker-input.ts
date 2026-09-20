@@ -3,27 +3,36 @@ import { Directive, ElementRef, inject } from '@angular/core';
 import { DXE_CONTEXT } from '../injection-tokens';
 
 @Directive({
-  selector: 'input[dxeComboboxInput]',
+  selector: 'input[dxeDatepickerInput]',
   hostDirectives: [
     {
       directive: Combobox,
-      inputs: ['alwaysExpanded', 'disabled', 'value'],
+      inputs: ['disabled', 'value'],
       outputs: ['valueChange'],
     },
   ],
   host: {
-    class: 'input input-sm mb-2 focus:outline-none',
+    class: 'grow min-w-0 bg-transparent outline-none cursor-text select-text',
+    '(click)': 'onClick()',
     '(keydown.escape)': 'onEscape()',
   },
 })
-export class DxeComboboxInput {
+export class DxeDatepickerInput {
   private readonly context = inject(DXE_CONTEXT, { optional: true });
   private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
   readonly combobox = inject(Combobox);
 
+  get nativeValue() {
+    return this.element.nativeElement.value;
+  }
+
   focus() {
     this.element.nativeElement.focus();
+  }
+
+  protected onClick() {
+    this.context?.open();
   }
 
   protected onEscape() {

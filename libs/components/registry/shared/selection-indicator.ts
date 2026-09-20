@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { DXE_STYLE_CONTEXT } from '../styles/style-context';
+import { DXE_CONTEXT } from '../injection-tokens';
 import type { DxeColor, DxeSize } from './model';
 
 const checkIconClasses: Record<DxeSize, string> = {
@@ -31,7 +31,7 @@ const checkIconColorClasses: Record<DxeColor, string> = {
   `,
 })
 export class DxeSelectionIndicator {
-  private readonly context = inject(DXE_STYLE_CONTEXT, { optional: true });
+  private readonly context = inject(DXE_CONTEXT, { optional: true });
 
   protected readonly checkIconClass = computed(() => {
     const color = this.context?.color();
