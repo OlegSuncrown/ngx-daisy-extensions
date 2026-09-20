@@ -8,8 +8,9 @@ export const SIMPLE_DATEPICKER_HTML = `<dxe-datepicker-root #picker>
       type="text"
       dxeDatepickerInput
       placeholder="Pick a date..."
-      [(value)]="inputValue"
-      (input)="onInput(inputValue())"
+      [value]="inputValue()"
+      (valueChange)="onValueChange($event)"
+      aria-describedby="date-format-hint"
       (keydown)="onInputKeydown($event)"
     />
   </dxe-datepicker-trigger>
@@ -23,24 +24,17 @@ export const SIMPLE_DATEPICKER_HTML = `<dxe-datepicker-root #picker>
     <table
       #gridTable
       tabindex="-1"
-      ngGrid
-      #grid="ngGrid"
-      class="w-full table-fixed"
+      dxeDatepickerGrid
       colWrap="continuous"
       rowWrap="nowrap"
       [enableSelection]="true"
       selectionMode="explicit"
-      (keydown)="onGridKeydown($event)"
+      (gridKeydown)="onGridKeydown($event)"
     >
       <thead>
         <tr>
           @for (day of weekdays(); track day.long) {
-            <th
-              role="columnheader"
-              scope="col"
-              class="text-xs font-medium text-base-content/60 text-center pb-2"
-              [attr.abbr]="day.long"
-            >
+            <th dxeDatepickerGridColumnHeader [attr.abbr]="day.long">
               {{ day.narrow }}
             </th>
           }
@@ -52,8 +46,7 @@ export const SIMPLE_DATEPICKER_HTML = `<dxe-datepicker-root #picker>
             @if ($first) {
               @for (day of daysFromPrevMonth(); track $index) {
                 <td
-                  class="p-0 h-10 text-center align-middle text-sm text-base-content/30"
-                  ngGridCell
+                  dxeDatepickerGridCell
                   [disabled]="true"
                   aria-hidden="true"
                   [tabindex]="-1"
@@ -63,20 +56,16 @@ export const SIMPLE_DATEPICKER_HTML = `<dxe-datepicker-root #picker>
               }
             }
             @for (day of week; track $index) {
-              <td class="p-0 h-10 text-center align-middle" ngGridCell [selected]="day.selected">
+              <td dxeDatepickerGridCell [selected]="isFocusDate(day.date)">
                 <button
-                  ngGridCellWidget
-                  type="button"
-                  class="leading-none btn btn-circle btn-sm"
-                  [class.btn-primary]="day.selected"
-                  [class.btn-ghost]="!day.selected"
-                  [class.btn-outline]="day.today && !day.selected"
-                  [attr.data-day]="day.displayName"
-                  [attr.data-focus-target]="isFocusTarget(day.date)"
-                  [attr.aria-label]="day.ariaLabel + (day.selected ? ', Selected' : '')"
-                  (click)="selectDate(day, $event)"
-                  (keydown.enter)="selectDate(day, $event)"
-                  (keydown.space)="selectDate(day, $event)"
+                  dxeDatepickerGridCellWidget
+                  [displayName]="day.dayOfMonth"
+                  [active]="isActive(day.date)"
+                  [selected]="isSelected(day.date)"
+                  [today]="isToday(day.date)"
+                  [focusTargetActive]="isFocusTarget(day.date)"
+                  [ariaLabel]="day.ariaLabel"
+                  (dateSelect)="selectDate(day, $event)"
                 >
                   {{ day.displayName }}
                 </button>
@@ -85,8 +74,7 @@ export const SIMPLE_DATEPICKER_HTML = `<dxe-datepicker-root #picker>
             @if ($last && week.length < 7) {
               @for (day of daysInNextMonth(); track $index) {
                 <td
-                  class="p-0 h-10 text-center align-middle text-sm text-base-content/30"
-                  ngGridCell
+                  dxeDatepickerGridCell
                   [disabled]="true"
                   aria-hidden="true"
                   [tabindex]="-1"
@@ -100,36 +88,34 @@ export const SIMPLE_DATEPICKER_HTML = `<dxe-datepicker-root #picker>
       </tbody>
     </table>
   </ng-container>
-</dxe-datepicker-root>`;
+</dxe-datepicker-root>
+<span id="date-format-hint" class="label">Format follows the current locale</span>`;
 
-export const SIMPLE_DATEPICKER_TS = `import { Grid, GridCell, GridCellWidget, GridRow } from '@angular/aria/grid';
-import { Component, computed, effect, inject, signal, untracked, viewChild, viewChildren } from '@angular/core';
-import { DateAdapter, MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
-import { DxeDatepickerImports, DxeDatepickerRoot } from 'ngx-daisy-extensions';
+export const SIMPLE_DATEPICKER_TS = `import { Component, effect, inject, signal, untracked, viewChild, viewChildren } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { DxeDatepickerImports, DxeDatepickerInput, DxeDatepickerRoot, DxeDatepickerService } from 'ngx-daisy-extensions';
 
 @Component({
   selector: 'app-simple-datepicker',
-  imports: [DxeDatepickerImports, Grid, GridRow, GridCell, GridCellWidget],
-  providers: [provideNativeDateAdapter()],
+  imports: [DxeDatepickerImports],
+  providers: [provideNativeDateAdapter(), DxeDatepickerService],
   templateUrl: './simple-datepicker.html',
 })
 export class SimpleDatepicker {
-  private readonly dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
-  private readonly dateFormats = inject(MAT_DATE_FORMATS);
+  readonly datepickerService = inject(DxeDatepickerService);
 
   readonly picker = viewChild.required<DxeDatepickerRoot>(DxeDatepickerRoot);
+  readonly datepickerInput = viewChild.required(DxeDatepickerInput);
   readonly selectedDate = signal<Date | null>(null);
   readonly inputValue = signal('');
-  readonly viewMonth = signal(this.dateAdapter.today());
+  readonly viewMonth = this.datepickerService.viewMonth;
+  readonly activeDate = signal(this.datepickerService.today());
 
-  readonly monthYearLabel = computed(() =>
-    this.dateAdapter.format(this.viewMonth(), this.dateFormats.display.monthYearLabel).toLocaleUpperCase(),
-  );
+  readonly monthYearLabel = this.datepickerService.monthYearLabel;
+  readonly activeMonthAnnouncement = this.datepickerService.activeMonthAnnouncement;
 
-  readonly activeMonthAnnouncement = computed(
-    () => \`Showing \${this.dateAdapter.format(this.viewMonth(), this.dateFormats.display.monthYearLabel)}\`,
-  );
-
-  // Build weekdays, weeks, and adjacent-month filler days with DateAdapter.
-  // Handle input parse/format, month navigation, and grid key boundaries here.
+  // Keep input, active-date, and committed selection state in the component.
+  // Delegate calendar math, today checks, and month navigation to DxeDatepickerService.
+  // On open, reset the visible month to the selected date or today.
+  // Style today separately from selected dates.
 }`;

@@ -11,10 +11,16 @@ export { DxeDatepickerImports } from './registry/datepicker';
 export {
   DxeDatepickerHeader,
   DxeDatepickerInput,
+  DxeDatepickerGrid,
+  DxeDatepickerGridCell,
+  DxeDatepickerGridCellWidget,
+  DxeDatepickerGridColumnHeader,
   DxeDatepickerPortal,
   DxeDatepickerRoot,
   DxeDatepickerTrigger,
+  DxeDatepickerService,
 } from './registry/datepicker';
+export type { CalendarCell, GridFocusReset } from './registry/datepicker';
 export { DXE_CONTEXT, provideDxeContext } from './registry/injection-tokens';
 export type { DxeContext, DxeStyleContext } from './registry/injection-tokens';
 export { DxeSelectImports } from './registry/select';

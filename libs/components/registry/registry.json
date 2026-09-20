@@ -54,10 +54,15 @@
     },
     "datepicker": {
       "files": [
+        "datepicker/datepicker-grid-cell-widget.ts",
+        "datepicker/datepicker-grid-cell.ts",
+        "datepicker/datepicker-grid-column-header.ts",
+        "datepicker/datepicker-grid.ts",
         "datepicker/datepicker-header.ts",
         "datepicker/datepicker-input.ts",
         "datepicker/datepicker-portal.ts",
         "datepicker/datepicker-root.ts",
+        "datepicker/datepicker-service.ts",
         "datepicker/datepicker-trigger.ts",
         "datepicker/index.ts"
       ],

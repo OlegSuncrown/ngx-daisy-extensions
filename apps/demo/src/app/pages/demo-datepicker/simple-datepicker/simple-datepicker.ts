@@ -1,141 +1,61 @@
 import { DatePipe } from '@angular/common';
-import { Grid, GridCell, GridCellWidget, GridRow } from '@angular/aria/grid';
-import { Component, computed, effect, ElementRef, inject, signal, untracked, viewChild, viewChildren } from '@angular/core';
-import { DateAdapter, MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
-import { DxeDatepickerImports, DxeDatepickerRoot } from 'ngx-daisy-extensions';
-
-const DAYS_PER_WEEK = 7;
-
-interface CalendarCell {
-  displayName: string;
-  ariaLabel: string;
-  date: Date;
-  selected: boolean;
-  today: boolean;
-}
-
-interface GridFocusReset {
-  gridBehavior?: {
-    focusBehavior?: {
-      activeCell: { set(value: undefined): void };
-      activeCoords: { set(value: { row: number; col: number }): void };
-    };
-  };
-}
+import { GridCellWidget } from '@angular/aria/grid';
+import { Component, effect, ElementRef, inject, signal, untracked, viewChild, viewChildren } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  DxeDatepickerGrid,
+  DxeDatepickerImports,
+  DxeDatepickerInput,
+  DxeDatepickerRoot,
+  DxeDatepickerService,
+  type CalendarCell,
+} from 'ngx-daisy-extensions';
 
 @Component({
   selector: 'app-simple-datepicker',
-  imports: [DxeDatepickerImports, DatePipe, Grid, GridRow, GridCell, GridCellWidget],
-  providers: [provideNativeDateAdapter()],
+  imports: [DxeDatepickerImports, DatePipe],
+  providers: [provideNativeDateAdapter(), DxeDatepickerService],
   templateUrl: './simple-datepicker.html',
   host: {
     class: 'block',
   },
 })
 export class SimpleDatepicker {
-  private readonly dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
-  private readonly dateFormats = inject(MAT_DATE_FORMATS);
+  readonly datepickerService = inject(DxeDatepickerService);
   private readonly dayButtons = viewChildren(GridCellWidget);
 
   readonly picker = viewChild.required<DxeDatepickerRoot>(DxeDatepickerRoot);
-  readonly grid = viewChild(Grid);
+  readonly grid = viewChild(DxeDatepickerGrid);
   readonly gridTable = viewChild<ElementRef<HTMLElement>>('gridTable');
+  readonly datepickerInput = viewChild.required(DxeDatepickerInput);
+
   readonly selectedDate = signal<Date | null>(null);
   readonly inputValue = signal('');
-  readonly viewMonth = signal(this.dateAdapter.today());
+  readonly viewMonth = this.datepickerService.viewMonth;
+  readonly activeDate = signal(this.datepickerService.today());
   readonly focusTargetDate = signal<Date | null>(null);
 
-  readonly monthYearLabel = computed(() =>
-    this.dateAdapter.format(this.viewMonth(), this.dateFormats.display.monthYearLabel).toLocaleUpperCase(),
-  );
+  readonly monthYearLabel = this.datepickerService.monthYearLabel;
+  readonly activeMonthAnnouncement = this.datepickerService.activeMonthAnnouncement;
 
-  readonly activeMonthAnnouncement = computed(
-    () => `Showing ${this.dateAdapter.format(this.viewMonth(), this.dateFormats.display.monthYearLabel)}`,
-  );
+  readonly prevMonthNumDays = this.datepickerService.prevMonthNumDays;
+  readonly daysFromPrevMonth = this.datepickerService.daysFromPrevMonth;
 
-  private readonly firstWeekOffset = computed(() => {
-    const firstOfMonth = this.dateAdapter.createDate(
-      this.dateAdapter.getYear(this.viewMonth()),
-      this.dateAdapter.getMonth(this.viewMonth()),
-      1,
-    );
+  readonly weekdays = this.datepickerService.weekdays;
+  readonly weeks = this.datepickerService.weeks;
 
-    return (
-      (DAYS_PER_WEEK + this.dateAdapter.getDayOfWeek(firstOfMonth) - this.dateAdapter.getFirstDayOfWeek()) % DAYS_PER_WEEK
-    );
-  });
-
-  readonly prevMonthNumDays = computed(() =>
-    this.dateAdapter.getNumDaysInMonth(this.dateAdapter.addCalendarMonths(this.viewMonth(), -1)),
-  );
-
-  readonly daysFromPrevMonth = computed(() => {
-    const days: number[] = [];
-    for (let i = this.firstWeekOffset() - 1; i >= 0; i--) {
-      days.push(this.prevMonthNumDays() - i);
-    }
-    return days;
-  });
-
-  readonly weekdays = computed(() => {
-    const firstDayOfWeek = this.dateAdapter.getFirstDayOfWeek();
-    const narrowWeekdays = this.dateAdapter.getDayOfWeekNames('narrow');
-    const longWeekdays = this.dateAdapter.getDayOfWeekNames('long');
-    const weekdays = longWeekdays.map((long, i) => ({ long, narrow: narrowWeekdays[i] }));
-    return weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
-  });
-
-  readonly weeks = computed(() => {
-    const viewMonth = this.viewMonth();
-    const selectedDate = this.selectedDate();
-    const daysInMonth = this.dateAdapter.getNumDaysInMonth(viewMonth);
-    const dateNames = this.dateAdapter.getDateNames();
-    const today = this.dateAdapter.today();
-    const weeks: CalendarCell[][] = [[]];
-
-    for (let i = 0, cell = this.firstWeekOffset(); i < daysInMonth; i++, cell++) {
-      if (cell === DAYS_PER_WEEK) {
-        weeks.push([]);
-        cell = 0;
-      }
-
-      const date = this.dateAdapter.createDate(
-        this.dateAdapter.getYear(viewMonth),
-        this.dateAdapter.getMonth(viewMonth),
-        i + 1,
-      );
-
-      weeks[weeks.length - 1].push({
-        displayName: dateNames[i],
-        ariaLabel: this.dateAdapter.format(date, this.dateFormats.display.dateA11yLabel),
-        date,
-        selected: selectedDate != null && this.dateAdapter.compareDate(date, selectedDate) === 0,
-        today: this.dateAdapter.compareDate(date, today) === 0,
-      });
-    }
-
-    return weeks;
-  });
-
-  readonly daysInNextMonth = computed(() => {
-    const activeWeeks = this.weeks();
-    const lastWeekLength = activeWeeks[activeWeeks.length - 1]?.length || 0;
-    const trailingCount = lastWeekLength > 0 ? 7 - lastWeekLength : 0;
-    const days: number[] = [];
-    for (let i = 1; i <= trailingCount; i++) {
-      days.push(i);
-    }
-    return days;
-  });
+  readonly daysInNextMonth = this.datepickerService.daysInNextMonth;
 
   constructor() {
     effect(() => {
-      const value = this.selectedDate();
+      if (this.picker().expanded() !== true) {
+        return;
+      }
+
       untracked(() => {
-        const formatted = value ? this.formatDate(value) : '';
-        if (this.inputValue() !== formatted) {
-          this.inputValue.set(formatted);
-        }
+        const targetDate = this.selectedDate() ?? this.datepickerService.today();
+        this.activeDate.set(targetDate);
+        this.viewMonth.set(targetDate);
       });
     });
 
@@ -145,7 +65,13 @@ export class SimpleDatepicker {
         return;
       }
 
-      const targetBtn = this.dayButtons().find((btn) => btn.element.getAttribute('data-focus-target') === 'true');
+      const buttons = this.dayButtons();
+      if (this.datepickerService.isOutsideViewMonth(target)) {
+        return;
+      }
+
+      const dayOfMonth = this.datepickerService.getDate(target);
+      const targetBtn = buttons.find((btn) => Number(btn.element.getAttribute('data-day')) === dayOfMonth);
       if (targetBtn) {
         targetBtn.element.focus();
         Promise.resolve().then(() => {
@@ -157,12 +83,33 @@ export class SimpleDatepicker {
 
   isFocusTarget(date: Date) {
     const target = this.focusTargetDate();
-    return target ? this.dateAdapter.compareDate(date, target) === 0 : false;
+    return target ? this.datepickerService.compareDate(date, target) === 0 : false;
   }
 
-  onInput(value: string) {
+  isSelected(date: Date) {
+    const selected = this.selectedDate();
+    return selected ? this.datepickerService.compareDate(date, selected) === 0 : false;
+  }
+
+  isFocusDate(date: Date) {
+    const selected = this.selectedDate();
+    const focusDate = selected ?? this.datepickerService.today();
+    return this.datepickerService.compareDate(date, focusDate) === 0;
+  }
+
+  isToday(date: Date) {
+    return this.datepickerService.isToday(date);
+  }
+
+  isActive(date: Date) {
+    return this.datepickerService.compareDate(date, this.activeDate()) === 0;
+  }
+
+  onValueChange(value: string) {
+    this.inputValue.set(value);
     const parsedDate = this.parseDate(value);
     if (parsedDate) {
+      this.activeDate.set(parsedDate);
       this.viewMonth.set(parsedDate);
     }
   }
@@ -171,9 +118,10 @@ export class SimpleDatepicker {
     if (event.key === 'Enter') {
       const parsedDate = this.parseDate(this.inputValue());
       if (parsedDate) {
+        this.activeDate.set(parsedDate);
         this.viewMonth.set(parsedDate);
         this.selectedDate.set(parsedDate);
-        this.picker().close();
+        this.picker().dismiss();
       }
       return;
     }
@@ -184,11 +132,11 @@ export class SimpleDatepicker {
   }
 
   prevMonth() {
-    this.viewMonth.set(this.dateAdapter.addCalendarMonths(this.viewMonth(), -1));
+    this.datepickerService.prevMonth();
   }
 
   nextMonth() {
-    this.viewMonth.set(this.dateAdapter.addCalendarMonths(this.viewMonth(), 1));
+    this.datepickerService.nextMonth();
   }
 
   selectDate(day: CalendarCell, event?: Event) {
@@ -197,8 +145,11 @@ export class SimpleDatepicker {
       event.stopPropagation();
     }
 
+    this.inputValue.set(this.formatDate(day.date));
+    this.activeDate.set(day.date);
     this.selectedDate.set(day.date);
-    this.picker().close();
+    this.datepickerInput().focus();
+    this.picker().dismiss();
   }
 
   onGridKeydown(event: KeyboardEvent) {
@@ -221,46 +172,7 @@ export class SimpleDatepicker {
     }
 
     const day = Number(dayAttr);
-    const year = this.dateAdapter.getYear(this.viewMonth());
-    const month = this.dateAdapter.getMonth(this.viewMonth());
-    const viewMonthNumDays = this.dateAdapter.getNumDaysInMonth(this.viewMonth());
-    const currentFocusedDate = this.dateAdapter.createDate(year, month, day);
-    let targetDate: Date | null = null;
-
-    switch (event.key) {
-      case 'ArrowLeft':
-        if (day === 1) {
-          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, -1);
-        }
-        break;
-      case 'ArrowRight':
-        if (day === viewMonthNumDays) {
-          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, 1);
-        }
-        break;
-      case 'ArrowUp':
-        if (day <= 7) {
-          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, -7);
-        }
-        break;
-      case 'ArrowDown':
-        if (day > viewMonthNumDays - 7) {
-          targetDate = this.dateAdapter.addCalendarDays(currentFocusedDate, 7);
-        }
-        break;
-      case 'PageUp':
-        targetDate = this.dateAdapter.addCalendarMonths(currentFocusedDate, event.ctrlKey ? -12 : -1);
-        break;
-      case 'PageDown':
-        targetDate = this.dateAdapter.addCalendarMonths(currentFocusedDate, event.ctrlKey ? 12 : 1);
-        break;
-      case 'Home':
-        targetDate = this.dateAdapter.createDate(year, month, 1);
-        break;
-      case 'End':
-        targetDate = this.dateAdapter.createDate(year, month, viewMonthNumDays);
-        break;
-    }
+    const targetDate = this.datepickerService.getTargetDate(day, event.key, event.ctrlKey);
 
     if (targetDate) {
       event.preventDefault();
@@ -280,31 +192,24 @@ export class SimpleDatepicker {
   }
 
   private navigateToDate(targetDate: Date) {
-    const currentMonth = this.dateAdapter.getMonth(this.viewMonth());
-    const currentYear = this.dateAdapter.getYear(this.viewMonth());
-    const targetMonth = this.dateAdapter.getMonth(targetDate);
-    const targetYear = this.dateAdapter.getYear(targetDate);
-    const monthShift = currentMonth !== targetMonth || currentYear !== targetYear;
+    const outsideViewMonth = this.datepickerService.isOutsideViewMonth(targetDate);
+    this.activeDate.set(targetDate);
 
-    if (monthShift) {
+    if (outsideViewMonth) {
       this.gridTable()?.nativeElement.focus();
-      const focusBehavior = (this.grid()?._pattern as unknown as GridFocusReset | undefined)?.gridBehavior?.focusBehavior;
-      if (focusBehavior) {
-        focusBehavior.activeCell.set(undefined);
-        focusBehavior.activeCoords.set({ row: -1, col: -1 });
-      }
+      this.grid()?.resetFocus();
+      this.focusTargetDate.set(targetDate);
       this.viewMonth.set(targetDate);
+    } else {
+      this.focusTargetDate.set(targetDate);
     }
-
-    this.focusTargetDate.set(targetDate);
   }
 
   private formatDate(date: Date) {
-    return this.dateAdapter.format(date, this.dateFormats.display.dateInput);
+    return this.datepickerService.formatDate(date);
   }
 
   private parseDate(value: string) {
-    const parsedDate = this.dateAdapter.parse(value, this.dateFormats.display.dateInput);
-    return parsedDate && this.dateAdapter.isValid(parsedDate) ? parsedDate : null;
+    return this.datepickerService.parseDate(value);
   }
 }

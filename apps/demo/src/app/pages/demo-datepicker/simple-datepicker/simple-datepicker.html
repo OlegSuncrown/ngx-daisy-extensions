@@ -10,8 +10,9 @@
         type="text"
         dxeDatepickerInput
         placeholder="Pick a date..."
-        [(value)]="inputValue"
-        (input)="onInput(inputValue())"
+        [value]="inputValue()"
+        (valueChange)="onValueChange($event)"
+        aria-describedby="date-format-hint"
         (keydown)="onInputKeydown($event)"
       />
     </dxe-datepicker-trigger>
@@ -24,20 +25,18 @@
 
       <table
         #gridTable
+        dxeDatepickerGrid
         tabindex="-1"
-        ngGrid
-        #grid="ngGrid"
-        class="w-full table-fixed"
         colWrap="continuous"
         rowWrap="nowrap"
         [enableSelection]="true"
         selectionMode="explicit"
-        (keydown)="onGridKeydown($event)"
+        (gridKeydown)="onGridKeydown($event)"
       >
         <thead>
           <tr>
             @for (day of weekdays(); track day.long) {
-              <th role="columnheader" scope="col" class="text-xs font-medium text-base-content/60 text-center pb-2" [attr.abbr]="day.long">
+              <th dxeDatepickerGridColumnHeader [attr.abbr]="day.long">
                 {{ day.narrow }}
               </th>
             }
@@ -48,33 +47,23 @@
             <tr ngGridRow>
               @if ($first) {
                 @for (day of daysFromPrevMonth(); track $index) {
-                  <td
-                    class="p-0 h-10 text-center align-middle text-sm text-base-content/30"
-                    ngGridCell
-                    [disabled]="true"
-                    aria-hidden="true"
-                    [tabindex]="-1"
-                  >
+                  <td dxeDatepickerGridCell [disabled]="true" aria-hidden="true" [tabindex]="-1">
                     {{ day }}
                   </td>
                 }
               }
 
               @for (day of week; track $index) {
-                <td class="p-0 h-10 text-center align-middle" ngGridCell [selected]="day.selected">
+                <td dxeDatepickerGridCell [selected]="isFocusDate(day.date)">
                   <button
-                    ngGridCellWidget
-                    type="button"
-                    class="leading-none btn btn-circle btn-sm"
-                    [class.btn-primary]="day.selected"
-                    [class.btn-ghost]="!day.selected"
-                    [class.btn-outline]="day.today && !day.selected"
-                    [attr.data-day]="day.displayName"
-                    [attr.data-focus-target]="isFocusTarget(day.date)"
-                    [attr.aria-label]="day.ariaLabel + (day.selected ? ', Selected' : '')"
-                    (click)="selectDate(day, $event)"
-                    (keydown.enter)="selectDate(day, $event)"
-                    (keydown.space)="selectDate(day, $event)"
+                    dxeDatepickerGridCellWidget
+                    [displayName]="day.dayOfMonth"
+                    [active]="isActive(day.date)"
+                    [selected]="isSelected(day.date)"
+                    [today]="isToday(day.date)"
+                    [focusTargetActive]="isFocusTarget(day.date)"
+                    [ariaLabel]="day.ariaLabel"
+                    (dateSelect)="selectDate(day, $event)"
                   >
                     {{ day.displayName }}
                   </button>
@@ -83,13 +72,7 @@
 
               @if ($last && week.length < 7) {
                 @for (day of daysInNextMonth(); track $index) {
-                  <td
-                    class="p-0 h-10 text-center align-middle text-sm text-base-content/30"
-                    ngGridCell
-                    [disabled]="true"
-                    aria-hidden="true"
-                    [tabindex]="-1"
-                  >
+                  <td dxeDatepickerGridCell [disabled]="true" aria-hidden="true" [tabindex]="-1">
                     {{ day }}
                   </td>
                 }
@@ -100,11 +83,8 @@
       </table>
     </ng-container>
   </dxe-datepicker-root>
-  <span class="label">
-    @if (selectedDate(); as date) {
-      Selected: {{ date | date: 'mediumDate' }}
-    } @else {
-      Format follows the current locale
-    }
-  </span>
+  <span id="date-format-hint" class="label">Format follows the current locale</span>
+  @if (selectedDate(); as date) {
+    <span class="label"> Selected: {{ date | date: 'mediumDate' }} </span>
+  }
 </fieldset>

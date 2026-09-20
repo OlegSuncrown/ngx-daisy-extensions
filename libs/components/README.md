@@ -51,7 +51,7 @@ That file has no component CSS. It only tells your Tailwind build which class na
 Import the component groups into standalone components:
 
 ```ts
-import { DxeComboboxImports, DxeDatepickerImports, DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
+import { DxeComboboxImports, DxeDatepickerImports, DxeDatepickerService, DxeSelectImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 ```
 
 ### Select
@@ -163,7 +163,33 @@ export class SimpleCombobox {
 
 ### Datepicker
 
-The datepicker is date-library agnostic. The library owns overlay and combobox plumbing. You own date math, formatting, and the calendar grid. The demo uses Angular Material's `DateAdapter` and Angular ARIA `ngGrid` for that consumer-side logic.
+The overlay and calendar grid are date-library agnostic. Provide Angular Material's `DateAdapter` (native, Moment, Luxon, and so on) and `DxeDatepickerService` for calendar math, formatting, and month navigation. You still own selection state and the calendar template.
+
+```bash
+npm install @angular/material
+```
+
+```ts
+import { Component, inject, signal } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { DxeDatepickerImports, DxeDatepickerService } from 'ngx-daisy-extensions';
+
+@Component({
+  selector: 'app-simple-datepicker',
+  imports: [DxeDatepickerImports],
+  providers: [provideNativeDateAdapter(), DxeDatepickerService],
+  templateUrl: './simple-datepicker.html',
+})
+export class SimpleDatepicker {
+  readonly datepickerService = inject(DxeDatepickerService);
+  readonly selectedDate = signal<Date | null>(null);
+  readonly inputValue = signal('');
+  readonly viewMonth = this.datepickerService.viewMonth;
+  readonly monthYearLabel = this.datepickerService.monthYearLabel;
+  readonly weekdays = this.datepickerService.weekdays;
+  readonly weeks = this.datepickerService.weeks;
+}
+```
 
 ```html
 <dxe-datepicker-root #picker>
@@ -185,17 +211,17 @@ The datepicker is date-library agnostic. The library owns overlay and combobox p
     <table
       #gridTable
       tabindex="-1"
-      ngGrid
+      dxeDatepickerGrid
       colWrap="continuous"
       rowWrap="nowrap"
       [enableSelection]="true"
       selectionMode="explicit"
-      (keydown)="onGridKeydown($event)"
+      (gridKeydown)="onGridKeydown($event)"
     >
       <thead>
         <tr>
           @for (day of weekdays(); track day.long) {
-            <th role="columnheader" scope="col" [attr.abbr]="day.long">{{ day.narrow }}</th>
+            <th dxeDatepickerGridColumnHeader [attr.abbr]="day.long">{{ day.narrow }}</th>
           }
         </tr>
       </thead>
@@ -203,14 +229,15 @@ The datepicker is date-library agnostic. The library owns overlay and combobox p
         @for (week of weeks(); track $index) {
           <tr ngGridRow>
             @for (day of week; track $index) {
-              <td ngGridCell [selected]="day.selected">
+              <td dxeDatepickerGridCell [selected]="day.selected">
                 <button
-                  ngGridCellWidget
-                  type="button"
-                  [attr.data-day]="day.displayName"
-                  [attr.data-focus-target]="isFocusTarget(day.date)"
-                  [attr.aria-label]="day.ariaLabel + (day.selected ? ', Selected' : '')"
-                  (click)="selectDate(day, $event)"
+                   dxeDatepickerGridCellWidget
+                  [displayName]="day.displayName"
+                  [selected]="day.selected"
+                  [today]="day.today"
+                  [focusTargetActive]="isFocusTarget(day.date)"
+                  [ariaLabel]="day.ariaLabel"
+                  (dateSelect)="selectDate(day, $event)"
                 >
                   {{ day.displayName }}
                 </button>
@@ -223,6 +250,17 @@ The datepicker is date-library agnostic. The library owns overlay and combobox p
   </ng-container>
 </dxe-datepicker-root>
 ```
+
+Use `dxeDatepickerGridCell` for adjacent-month filler cells. Disabled cells are styled automatically;
+set the inherited grid-cell inputs explicitly:
+
+```html
+<td dxeDatepickerGridCell [disabled]="true" [tabindex]="-1">
+  {{ day }}
+</td>
+```
+
+When keyboard navigation leaves the visible month, call `resetFocus()` on `DxeDatepickerGrid` so the grid does not keep a stale active cell.
 
 ## Development
 
