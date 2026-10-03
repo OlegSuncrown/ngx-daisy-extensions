@@ -1,0 +1,136 @@
+<div class="grid grid-cols-[1fr_auto] gap-2">
+  <fieldset class="fieldset bg-base-100 border-base-300 rounded-box border p-4">
+    <legend class="fieldset-legend">Signal forms</legend>
+
+    <div class="grid grid-cols-2 gap-2">
+      <div class="flex flex-col">
+        <label class="label mb-1" for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          class="input w-full max-w-xs"
+          autocomplete="email"
+          [class.input-error]="flightForm.email().touched() && flightForm.email().invalid()"
+          [formField]="flightForm.email"
+        />
+      </div>
+      <div class="col-start-1">
+        <label class="label mb-1">Departure</label>
+        <app-country-combobox [formField]="flightForm.from" />
+      </div>
+
+      <div>
+        <label class="label mb-1">Return</label>
+        <app-country-combobox [formField]="flightForm.to" />
+      </div>
+    </div>
+
+    <div>
+      <span class="fieldset-legend mb-0">Travelers</span>
+    </div>
+
+    <div class="overflow-x-auto rounded-box border border-base-300 bg-base-200">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="w-32">Title</th>
+            <th>User</th>
+            <th class="w-42 text-right">
+              <button class="btn btn-primary btn-sm" type="button" (click)="addTraveler()">Add traveler</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (traveler of flightForm.travelers; track traveler; let index = $index) {
+            <tr>
+              <td class="align-top">
+                <app-title-select [formField]="traveler.title" />
+              </td>
+              <td class="align-top">
+                <app-user-selection [formField]="traveler.user" />
+              </td>
+              <td class="align-middle text-right">
+                <button class="btn btn-sm btn-ghost btn-error" type="button" (click)="removeTraveler(index)">Remove</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="text-center opacity-60" colspan="3">No travelers</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (flightForm.travelers().invalid()) {
+      <ul>
+        @for (error of flightForm.travelers().errors(); track error) {
+          <li class="label text-error">{{ error.message }}</li>
+        }
+      </ul>
+    }
+
+    <div class="flex justify-end py-2">
+      <button class="btn btn-primary btn-sm w-full" type="submit">Submit</button>
+    </div>
+  </fieldset>
+
+  <pre
+    class="bg-black rounded-box p-4 overflow-auto text-xs font-mono whitespace-pre self-start sticky top-4 max-h-[calc(100dvh-2rem)] mt-4"
+  ><code class="hljs bg-transparent! p-0!" [innerHTML]="highlightedFlightModel()"></code></pre>
+</div>
+
+<!-- <section>
+  <h1 class="text-2xl font-bold">Signal Form</h1>
+  <p class="text-sm text-gray-500 mb-4">Name and email fields with signal validation.</p>
+
+  <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="card bg-base-100 card-border border-base-content/5 card-sm">
+        <div class="card-body">
+          <form novalidate (submit)="onSubmit($event)">
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Contact</legend>
+
+              <label class="label" for="name">Name</label>
+              <input
+                id="name"
+                type="text"
+                class="input w-full"
+                autocomplete="name"
+                [class.input-error]="contactForm.name().touched() && contactForm.name().invalid()"
+                [formField]="contactForm.name"
+              />
+              @if (contactForm.name().touched() && contactForm.name().invalid()) {
+                <ul>
+                  @for (error of contactForm.name().errors(); track error) {
+                    <li class="label text-error">{{ error.message }}</li>
+                  }
+                </ul>
+              }
+
+              <label class="label" for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                class="input w-full"
+                autocomplete="email"
+                [class.input-error]="contactForm.email().touched() && contactForm.email().invalid()"
+                [formField]="contactForm.email"
+              />
+              @if (contactForm.email().touched() && contactForm.email().invalid()) {
+                <ul>
+                  @for (error of contactForm.email().errors(); track error) {
+                    <li class="label text-error">{{ error.message }}</li>
+                  }
+                </ul>
+              }
+
+              <button class="btn btn-primary mt-4" type="submit">Submit</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->

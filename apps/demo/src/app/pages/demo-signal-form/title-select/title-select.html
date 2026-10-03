@@ -1,0 +1,32 @@
+<dxe-select-root
+  [color]="touched() && invalid() ? 'error' : undefined"
+  [value]="selectedOption()"
+  (valueChange)="selectedOption.set($event)"
+  (commit)="onCommit()"
+>
+  <dxe-select-trigger>
+    @if (value(); as title) {
+      {{ title }}
+    } @else {
+      <dxe-placeholder>Select a title</dxe-placeholder>
+    }
+    <dxe-dropdown-button />
+  </dxe-select-trigger>
+  <ng-container *dxeSelectPortal>
+    @for (title of titles; track title) {
+      <dxe-select-option #option [value]="title" [label]="title">
+        <dxe-select-option-label>{{ title }}</dxe-select-option-label>
+        @if (option.selected()) {
+          <dxe-selection-indicator />
+        }
+      </dxe-select-option>
+    }
+  </ng-container>
+</dxe-select-root>
+@if (touched() && invalid() && errors().length > 0) {
+  <ul>
+    @for (error of errors(); track error) {
+      <li class="label text-error">{{ error.message }}</li>
+    }
+  </ul>
+}
