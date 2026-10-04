@@ -1,5 +1,5 @@
 import { Component, computed, effect, signal } from '@angular/core';
-import { applyEach, form, FormField, minLength, required } from '@angular/forms/signals';
+import { applyEach, email, form, FormField, minLength, required } from '@angular/forms/signals';
 import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';
 import { Country, CountryCombobox } from './country-combobox/country-combobox';
@@ -34,8 +34,9 @@ export class DemoSignalFormPage {
 
   readonly flightForm = form(this.flightModel, (schemaPath) => {
     required(schemaPath.email, { message: 'Email is required' });
-    required(schemaPath.from, { message: 'From is required' });
-    required(schemaPath.to, { message: 'To is required' });
+    email(schemaPath.email, { message: 'Enter a valid email address' });
+    required(schemaPath.from, { message: 'Departure is required' });
+    required(schemaPath.to, { message: 'Destination is required' });
     required(schemaPath.departureDate, { message: 'Departure date is required' });
     required(schemaPath.returnDate, { message: 'Return date is required' });
     minLength(schemaPath.travelers, 1, { message: 'Travelers are required' });

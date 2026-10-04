@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, debounced, input, model, output, signal } from '@angular/core';
+import { Component, computed, debounced, input, linkedSignal, model, output, signal } from '@angular/core';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
@@ -52,7 +52,10 @@ export class UserSelection implements FormValueControl<SelectedUser | null> {
   readonly disabled = input(false);
   readonly touch = output<void>();
 
-  readonly selectedOption = signal<UserOption[]>([]);
+  readonly selectedOption = linkedSignal(() => {
+    const user = this.value();
+    return user ? [user.userId] : [];
+  });
   readonly searchString = signal('');
 
   private readonly debouncedSearch = debounced(() => this.searchString(), 300);
@@ -95,9 +98,9 @@ export class UserSelection implements FormValueControl<SelectedUser | null> {
   });
 
   onCommit() {
-    const selected = this.selectedOption();
-    if (selected.length > 0) {
-      const user = selected[0];
+    const id = this.selectedOption()[0];
+    const user = this.options().find((item) => item.id === id);
+    if (user) {
       this.value.set({ userId: user.id, userName: user.label });
     }
 
@@ -109,7 +112,6 @@ export class UserSelection implements FormValueControl<SelectedUser | null> {
       return;
     }
     this.value.set(null);
-    this.selectedOption.set([]);
     this.touch.emit();
   }
 }

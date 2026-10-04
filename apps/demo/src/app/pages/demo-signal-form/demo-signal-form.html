@@ -1,4 +1,4 @@
-<div class="grid grid-cols-[1fr_auto] gap-2">
+<div class="grid grid-cols-[1fr_30rem] gap-2">
   <fieldset class="fieldset bg-base-100 border-base-300 rounded-box border p-4">
     <legend class="fieldset-legend">Signal forms</legend>
 
@@ -8,20 +8,27 @@
         <input
           id="email"
           type="email"
-          class="input w-full max-w-xs"
+          class="input w-full"
           autocomplete="email"
           [class.input-error]="flightForm.email().touched() && flightForm.email().invalid()"
           [formField]="flightForm.email"
         />
+        @if (flightForm.email().touched() && flightForm.email().invalid() && flightForm.email().errors().length > 0) {
+          <ul>
+            @for (error of flightForm.email().errors(); track error) {
+              <li class="label text-error mt-1">{{ error.message }}</li>
+            }
+          </ul>
+        }
       </div>
       <div class="col-start-1">
         <label class="label mb-1">Departure</label>
-        <app-country-combobox [formField]="flightForm.from" />
+        <app-country-combobox [formField]="flightForm.from" class="w-full" />
       </div>
 
       <div>
         <label class="label mb-1">Return</label>
-        <app-country-combobox [formField]="flightForm.to" />
+        <app-country-combobox [formField]="flightForm.to" class="w-full" />
       </div>
     </div>
 
@@ -70,8 +77,8 @@
       </ul>
     }
 
-    <div class="flex justify-end py-2">
-      <button class="btn btn-primary btn-sm w-full" type="submit">Submit</button>
+    <div class="flex py-2">
+      <button class="btn btn-primary btn-sm" type="submit">Submit</button>
     </div>
   </fieldset>
 

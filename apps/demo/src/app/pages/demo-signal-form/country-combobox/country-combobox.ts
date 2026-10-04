@@ -1,4 +1,4 @@
-import { Component, computed, input, model, output, signal } from '@angular/core';
+import { Component, computed, input, linkedSignal, model, output, signal } from '@angular/core';
 import { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { DxeComboboxImports, DxeSelectionIndicator } from 'ngx-daisy-extensions';
 
@@ -22,7 +22,10 @@ export class CountryCombobox implements FormValueControl<Country | null> {
   readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
   readonly touch = output<void>();
 
-  readonly selectedOption = signal<Country[]>([]);
+  readonly selectedOption = linkedSignal(() => {
+    const country = this.value();
+    return country ? [country.code] : [];
+  });
   readonly searchString = signal('');
 
   readonly options = computed(() =>
@@ -30,9 +33,10 @@ export class CountryCombobox implements FormValueControl<Country | null> {
   );
 
   onCommit() {
-    const selected = this.selectedOption();
-    if (selected.length > 0) {
-      this.value.set(selected[0]);
+    const code = this.selectedOption()[0];
+    const country = ALL_COUNTRIES.find((item) => item.code === code);
+    if (country) {
+      this.value.set(country);
     }
 
     this.touch.emit();
@@ -40,7 +44,6 @@ export class CountryCombobox implements FormValueControl<Country | null> {
 
   clear() {
     this.value.set(null);
-    this.selectedOption.set([]);
     this.touch.emit();
   }
 }

@@ -1,10 +1,5 @@
-<dxe-combobox-root
-  [color]="touched() && invalid() ? 'error' : undefined"
-  [value]="selectedOption()"
-  (valueChange)="selectedOption.set($event)"
-  (commit)="onCommit()"
->
-  <dxe-combobox-trigger>
+<dxe-combobox-root [color]="touched() && invalid() ? 'error' : undefined" [(value)]="selectedOption" (commit)="onCommit()">
+  <dxe-combobox-trigger class="w-full">
     @if (value(); as country) {
       {{ country.name }}
       <dxe-clear-button label="Clear selected country" (clear)="clear()" />
@@ -19,7 +14,7 @@
   }
   <ng-container *dxeComboboxPortal>
     @for (country of options(); track country.code) {
-      <dxe-combobox-option #option [value]="country" [label]="country.name">
+      <dxe-combobox-option #option [value]="country.code" [label]="country.name">
         <dxe-combobox-option-label>{{ country.name }}</dxe-combobox-option-label>
         <dxe-selection-indicator [class.invisible]="!option.selected()" />
       </dxe-combobox-option>

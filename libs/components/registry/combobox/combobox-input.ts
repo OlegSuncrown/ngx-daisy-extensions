@@ -12,7 +12,7 @@ import { DXE_CONTEXT } from '../injection-tokens';
     },
   ],
   host: {
-    class: 'input input-sm mb-2 focus:outline-none',
+    class: 'input input-sm mb-2 focus:outline-none w-full',
     '(keydown.escape)': 'onEscape()',
   },
 })

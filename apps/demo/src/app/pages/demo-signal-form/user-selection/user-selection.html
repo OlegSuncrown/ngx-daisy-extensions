@@ -1,9 +1,4 @@
-<dxe-combobox-root
-  [color]="touched() && invalid() ? 'error' : undefined"
-  [value]="selectedOption()"
-  (valueChange)="selectedOption.set($event)"
-  (commit)="onCommit()"
->
+<dxe-combobox-root [color]="touched() && invalid() ? 'error' : undefined" [(value)]="selectedOption" (commit)="onCommit()">
   <dxe-combobox-trigger [disabled]="disabled()">
     @if (value(); as user) {
       {{ user.userName }}
@@ -13,20 +8,13 @@
       <dxe-dropdown-button />
     }
   </dxe-combobox-trigger>
-  <input
-    type="text"
-    dxeComboboxInput
-    alwaysExpanded
-    placeholder="Search users..."
-    [disabled]="disabled()"
-    [(value)]="searchString"
-  />
+  <input type="text" dxeComboboxInput alwaysExpanded placeholder="Search users..." [disabled]="disabled()" [(value)]="searchString" />
   @if (showEmpty()) {
     <dxe-empty-state>{{ emptyText() }}</dxe-empty-state>
   }
   <ng-container *dxeComboboxPortal>
     @for (user of options(); track user.id) {
-      <dxe-combobox-option #option [value]="user" [label]="user.label">
+      <dxe-combobox-option #option [value]="user.id" [label]="user.label">
         <dxe-combobox-option-label>
           <span class="flex items-center gap-2 min-w-0">
             <img class="size-6 rounded-full shrink-0" [src]="user.image" [alt]="user.label" />
